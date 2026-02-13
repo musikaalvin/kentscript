@@ -4,24 +4,7 @@ TypeScript syntax meets Python power - A clean, expressive language for the mode
 
 <p align="center">
   <img src="https://img.shields.io/badge/Version-5.0-blue?style=for-the-badge" alt="Version 5.0">
-  <img src="https://img.shields.io/badge/Python-3.8%2B-green?style=for-the-badge&logo=python" alt="Python 3.8+">
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=for-the-badge" alt="MIT License">
-  <img src="https://img.shields.io/badge/Status-Alpha-orange?style=for-the-badge" alt="Alpha Status">
-</p>
-
-<p align="center">
-  <a href="#overview">Overview</a> •
-  <a href="#features">Features</a> •
-  <a href="#quick-start">Quick Start</a> •
-  <a href="#syntax">Syntax</a> •
-  <a href="#examples">Examples</a> •
-  <a href="#roadmap">Roadmap</a> •
-  <a href="#contributing">Contributing</a>
-</p>
-
-📖 Overview
-
-KentScript is a modern, expressive scripting language that combines the familiar syntax of TypeScript/JavaScript with the power and ecosystem of Python. Designed for productivity and readability, it brings web development syntax to system scripting, data science, automation, and beyond.
+Script is a modern, expressive scripting language that combines the familiar syntax of TypeScript/JavaScript with the power and ecosystem of Python. Designed for productivity and readability, it brings web development syntax to system scripting, data science, automation, and beyond.
 
 ✨ Why KentScript?
 
