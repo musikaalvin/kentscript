@@ -1,0 +1,9 @@
+{
+    "version": "3.1.0",
+    "build_date": "2026-04-04",
+    "name": "KentScript",
+    "binary_size_mb": 2.97,
+    "sha256": "6972106edb3d2aa01cbfd2b6fb4074c346e2a0d97894894788b2f784e13b3dc4",
+    "binary_url": "https://github.com/musikaalvin/kentscript/raw/main/kentscript",
+    "manifest_url": "https://github.com/musikaalvin/kentscript/raw/main/manifest.json"
+}
