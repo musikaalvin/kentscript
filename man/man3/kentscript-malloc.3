@@ -1,0 +1,68 @@
+.TH KENTSCRIPT-MALLOC 3 "KentScript Manual"
+.SH NAME
+kentscript-malloc \- KentScript memory management functions
+.SH SYNOPSIS
+.B unsafe {
+.br
+let ptr = malloc(1024);
+.br
+ptr_write(ptr, 0, 42);
+.br
+free(ptr);
+.br
+}
+.SH DESCRIPTION
+These functions provide low-level memory management. They must be called from within an \fBunsafe\fR block.
+.SH FUNCTIONS
+.TP
+\fBmalloc(size: int) -> *u8\fR
+Allocate \fIsize\fR bytes of heap memory. Returns a pointer to the allocated memory block, or null if allocation fails.
+.br
+\fBExample:\fR let ptr = malloc(256);
+.TP
+\fBfree(ptr: *u8)\fR
+Free a previously allocated memory block. The pointer must have been obtained from \fBmalloc\fR, \fBrealloc\fR, or \fBcalloc\fR.
+.br
+\fBWarning:\fR Double-freeing or freeing invalid pointers causes undefined behavior.
+.TP
+\fBrealloc(ptr: *u8, size: int) -> *u8\fR
+Change the size of the memory block pointed to by \fIptr\fR to \fIsize\fR bytes. The contents of the memory area are preserved up to the minimum of the old and new sizes. If the new size is larger, the added memory is uninitialized. Returns a pointer to the reallocated memory block.
+.TP
+\fBcalloc(nmemb: int, size: int) -> *u8\fR
+Allocate memory for an array of \fInmemb\fR elements of \fIsize\fR bytes each and returns a pointer to the allocated memory. The memory is set to zero.
+.TP
+\fBmemcpy(dest: *u8, src: *u8, n: int)\fR
+Copy \fIn\fR bytes from memory area \fIsrc\fR to memory area \fIdest\fR. The areas must not overlap.
+.TP
+\fBmemset(ptr: *u8, byte: int, n: int)\fR
+Fill the first \fIn\fR bytes of the memory area pointed to by \fIptr\fR with the constant byte \fIbyte\fR.
+.TP
+\fBmemmove(dest: *u8, src: *u8, n: int)\fR
+Copy \fIn\fR bytes from memory area \fIsrc\fR to memory area \fIdest\fR. The areas may overlap.
+.SH NOTES
+These functions wrap the C standard library functions. Memory allocated with these functions must be freed to avoid memory leaks.
+.SH EXAMPLE
+unsafe {
+.br
+    let ptr = malloc(1024);
+.br
+    if ptr != 0 {
+.br
+        memset(ptr, 0, 1024);
+.br
+        ptr_write(ptr, 0, 0x42);
+.br
+        let val = ptr_read(ptr, 1);
+.br
+        free(ptr);
+.br
+    }
+.br
+}
+.SH SEE ALSO
+.BR kentscript (1),
+.BR kentscript-stdlib (3)
+.SH AUTHOR
+pyLord (Musika Alvin) - Uganda
+.SH LICENSE
+MIT

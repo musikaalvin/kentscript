@@ -1,0 +1,654 @@
+{
+  "Function": {
+    "prefix": "func",
+    "body": [
+      "func ${1:name}(${2:params}) -> ${3:void} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Function definition"
+  },
+  "Function with types": {
+    "prefix": "funct",
+    "body": [
+      "func ${1:name}(${2:param}: ${3:i64}) -> ${4:i64} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Typed function definition"
+  },
+  "Generator Function": {
+    "prefix": "func*",
+    "body": [
+      "func* ${1:name}(${2:params}) {",
+      "    yield ${0};",
+      "}"
+    ],
+    "description": "Generator function"
+  },
+  "Async Function": {
+    "prefix": "async",
+    "body": [
+      "async func ${1:name}(${2:params}) -> ${3:void} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Async function"
+  },
+  "Main Function": {
+    "prefix": "main",
+    "body": [
+      "func main() {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Main entry point"
+  },
+  "Class": {
+    "prefix": "class",
+    "body": [
+      "class ${1:Name} {",
+      "    func __init__(self${2:, params}) {",
+      "        ${0}",
+      "    }",
+      "}"
+    ],
+    "description": "Class definition"
+  },
+  "Struct": {
+    "prefix": "struct",
+    "body": [
+      "struct ${1:Name} {",
+      "    ${2:field}: ${3:i64};",
+      "}"
+    ],
+    "description": "Struct definition"
+  },
+  "Enum": {
+    "prefix": "enum",
+    "body": [
+      "enum ${1:Name} {",
+      "    ${2:Variant1},",
+      "    ${3:Variant2}",
+      "}"
+    ],
+    "description": "Enum definition"
+  },
+  "If Statement": {
+    "prefix": "if",
+    "body": [
+      "if ${1:condition} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "If statement"
+  },
+  "If-Else": {
+    "prefix": "ife",
+    "body": [
+      "if ${1:condition} {",
+      "    ${2}",
+      "} else {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "If-else statement"
+  },
+  "While Loop": {
+    "prefix": "while",
+    "body": [
+      "while ${1:condition} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "While loop"
+  },
+  "For Loop": {
+    "prefix": "for",
+    "body": [
+      "for ${1:i} in ${2:range(10)} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "For loop"
+  },
+  "Match Statement": {
+    "prefix": "match",
+    "body": [
+      "match ${1:value} {",
+      "    case ${2:pattern}: {",
+      "        ${3}",
+      "    }",
+      "    default: {",
+      "        ${0}",
+      "    }",
+      "}"
+    ],
+    "description": "Match statement"
+  },
+  "Unsafe Block": {
+    "prefix": "unsafe",
+    "body": [
+      "unsafe {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Unsafe block for low-level operations"
+  },
+  "Try-Catch": {
+    "prefix": "try",
+    "body": [
+      "try {",
+      "    ${1}",
+      "} catch ${2:e} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Try-catch exception handling"
+  },
+  "Variable Declaration": {
+    "prefix": "let",
+    "body": [
+      "let ${1:name} = ${0};"
+    ],
+    "description": "Variable declaration"
+  },
+  "Typed Variable": {
+    "prefix": "lett",
+    "body": [
+      "let ${1:name}: ${2:i64} = ${0};"
+    ],
+    "description": "Typed variable declaration"
+  },
+  "Constant": {
+    "prefix": "const",
+    "body": [
+      "const ${1:NAME} = ${0};"
+    ],
+    "description": "Constant declaration"
+  },
+  "Mutable Variable": {
+    "prefix": "mut",
+    "body": [
+      "mut ${1:name} = ${0};"
+    ],
+    "description": "Mutable variable"
+  },
+  "Print": {
+    "prefix": "print",
+    "body": [
+      "print(${0});"
+    ],
+    "description": "Print to stdout"
+  },
+  "Import": {
+    "prefix": "import",
+    "body": [
+      "import ${0};"
+    ],
+    "description": "Import module"
+  },
+  "From Import": {
+    "prefix": "from",
+    "body": [
+      "from ${1:module} import ${0};"
+    ],
+    "description": "Import from module"
+  },
+  "Inline Assembly": {
+    "prefix": "asm",
+    "body": [
+      "unsafe {",
+      "    asm(\"${0}\");",
+      "}"
+    ],
+    "description": "Inline assembly (requires unsafe)"
+  },
+  "Memory Allocation": {
+    "prefix": "malloc",
+    "body": [
+      "unsafe {",
+      "    let ${1:ptr} = malloc(${2:size});",
+      "    ${0}",
+      "    free(${1:ptr});",
+      "}"
+    ],
+    "description": "Memory allocation (requires unsafe)"
+  },
+  "Pointer Operations": {
+    "prefix": "ptr",
+    "body": [
+      "unsafe {",
+      "    let ${1:value} = ptr_read(${2:addr}, ${3:size});",
+      "    ptr_write(${2:addr}, ${0});",
+      "}"
+    ],
+    "description": "Pointer read/write (requires unsafe)"
+  },
+  "I/O Port Access": {
+    "prefix": "io",
+    "body": [
+      "unsafe {",
+      "    let ${1:value} = io[${2:port}];",
+      "    io[${2:port}] = ${0};",
+      "}"
+    ],
+    "description": "I/O port access (requires unsafe)"
+  },
+  "MSR Access": {
+    "prefix": "msr",
+    "body": [
+      "unsafe {",
+      "    let ${1:value} = msr[${2:register}];",
+      "    msr[${2:register}] = ${0};",
+      "}"
+    ],
+    "description": "Model-specific register access (requires unsafe)"
+  },
+  "Atomic Operations": {
+    "prefix": "atomic",
+    "body": [
+      "unsafe {",
+      "    let ${1:value} = atomic_load(${2:ptr});",
+      "    atomic_store(${2:ptr}, ${0});",
+      "}"
+    ],
+    "description": "Atomic operations (requires unsafe)"
+  },
+  "SIMD Vector": {
+    "prefix": "simd",
+    "body": [
+      "let ${1:vec} = simd_load(${2:ptr});",
+      "let ${3:result} = simd_add(${1:vec}, ${0});"
+    ],
+    "description": "SIMD vector operations"
+  },
+  "Thread": {
+    "prefix": "thread",
+    "body": [
+      "thread ${1:name} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Thread definition"
+  },
+  "Comment Block": {
+    "prefix": "comment",
+    "body": [
+      "/*",
+      " * ${0}",
+      " */"
+    ],
+    "description": "Block comment"
+  },
+  "Region": {
+    "prefix": "region",
+    "body": [
+      ":: region ${1:name}",
+      "${0}",
+      ":: endregion"
+    ],
+    "description": "Code region for folding"
+  },
+  "Borrow": {
+    "prefix": "borrow",
+    "body": [
+      "borrow ${1:variable}${2:, mutable=true};",
+      "${0}",
+      "release ${1:variable};"
+    ],
+    "description": "Borrow checker - borrow and release"
+  },
+  "Move": {
+    "prefix": "move",
+    "body": [
+      "move ${1:variable} to ${0:scope};"
+    ],
+    "description": "Move ownership"
+  },
+  "With Statement": {
+    "prefix": "with",
+    "body": [
+      "with ${1:resource} as ${2:name} {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Context manager"
+  },
+  "Lambda": {
+    "prefix": "lambda",
+    "body": [
+      "(${1:params}) => ${0:expression}"
+    ],
+    "description": "Lambda expression"
+  },
+  "Decorator": {
+    "prefix": "decorator",
+    "body": [
+      "@${1:decorator_name}",
+      "func ${2:name}(${3:params}) {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Function decorator"
+  },
+  "Union": {
+    "prefix": "union",
+    "body": [
+      "union ${1:Name} {",
+      "    ${2:field1}: ${3:i64};",
+      "    ${4:field2}: ${5:f64};",
+      "}"
+    ],
+    "description": "Union definition"
+  },
+  "Interface": {
+    "prefix": "interface",
+    "body": [
+      "interface ${1:Name} {",
+      "    func ${2:method}(self${3:, params});",
+      "}"
+    ],
+    "description": "Interface definition"
+  },
+  "Type Alias": {
+    "prefix": "type",
+    "body": [
+      "type ${1:Alias} = ${0:Type};"
+    ],
+    "description": "Type alias"
+  },
+  "Assert": {
+    "prefix": "assert",
+    "body": [
+      "assert ${1:condition}, \"${0:message}\";"
+    ],
+    "description": "Assertion"
+  },
+  "Do-While": {
+    "prefix": "do",
+    "body": [
+      "do {",
+      "    ${0}",
+      "} while ${1:condition};"
+    ],
+    "description": "Do-while loop"
+  },
+  "Switch": {
+    "prefix": "switch",
+    "body": [
+      "switch ${1:value} {",
+      "    case ${2:value1}: {",
+      "        ${3}",
+      "    }",
+      "    default: {",
+      "        ${0}",
+      "    }",
+      "}"
+    ],
+    "description": "Switch statement"
+  },
+  "Result Type": {
+    "prefix": "result",
+    "body": [
+      "let ${1:result}: Result<${2:T}, ${3:E}> = ${0:Ok(value)};"
+    ],
+    "description": "Result type for error handling"
+  },
+  "Option Type": {
+    "prefix": "option",
+    "body": [
+      "let ${1:opt}: Option<${2:T}> = ${0:Some(value)};"
+    ],
+    "description": "Option type for nullable values"
+  },
+  "Match Result": {
+    "prefix": "matchresult",
+    "body": [
+      "match ${1:result} {",
+      "    case Ok(${2:value}): {",
+      "        ${3}",
+      "    }",
+      "    case Err(${4:error}): {",
+      "        ${0}",
+      "    }",
+      "}"
+    ],
+    "description": "Match on Result type"
+  },
+  "Match Option": {
+    "prefix": "matchoption",
+    "body": [
+      "match ${1:option} {",
+      "    case Some(${2:value}): {",
+      "        ${3}",
+      "    }",
+      "    case None: {",
+      "        ${0}",
+      "    }",
+      "}"
+    ],
+    "description": "Match on Option type"
+  },
+  "Syscall": {
+    "prefix": "syscall",
+    "body": [
+      "unsafe {",
+      "    let ${1:result} = syscall(${2:number}, ${3:arg1}, ${4:arg2});",
+      "    ${0}",
+      "}"
+    ],
+    "description": "System call (requires unsafe)"
+  },
+  "RDTSC": {
+    "prefix": "rdtsc",
+    "body": [
+      "unsafe {",
+      "    let ${1:cycles} = rdtsc();",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Read timestamp counter"
+  },
+  "CPUID": {
+    "prefix": "cpuid",
+    "body": [
+      "unsafe {",
+      "    let (${1:eax}, ${2:ebx}, ${3:ecx}, ${4:edx}) = cpuid(${5:leaf});",
+      "    ${0}",
+      "}"
+    ],
+    "description": "CPU identification"
+  },
+  "Volatile Read": {
+    "prefix": "volread",
+    "body": [
+      "unsafe {",
+      "    let ${1:value} = volatile_read(${2:addr});",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Volatile memory read"
+  },
+  "Volatile Write": {
+    "prefix": "volwrite",
+    "body": [
+      "unsafe {",
+      "    volatile_write(${1:addr}, ${2:value});",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Volatile memory write"
+  },
+  "MMIO Read": {
+    "prefix": "mmioread",
+    "body": [
+      "unsafe {",
+      "    let ${1:value} = mmio_read(${2:addr});",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Memory-mapped I/O read"
+  },
+  "MMIO Write": {
+    "prefix": "mmiowrite",
+    "body": [
+      "unsafe {",
+      "    mmio_write(${1:addr}, ${2:value});",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Memory-mapped I/O write"
+  },
+  "Async Await": {
+    "prefix": "asyncawait",
+    "body": [
+      "async func ${1:name}(${2:params}) -> ${3:void} {",
+      "    let ${4:result} = await ${5:promise};",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Async function with await"
+  },
+  "Generator": {
+    "prefix": "generator",
+    "body": [
+      "func* ${1:name}(${2:params}) {",
+      "    for ${3:i} in range(${4:10}) {",
+      "        yield ${5:i};",
+      "    }",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Generator function"
+  },
+  "Decorator Function": {
+    "prefix": "decodef",
+    "body": [
+      "func ${1:decorator}(${2:func}) {",
+      "    func wrapper(${3:args}) {",
+      "        ${4:// Before}",
+      "        let result = ${2:func}(${3:args});",
+      "        ${5:// After}",
+      "        return result;",
+      "    }",
+      "    return wrapper;",
+      "}"
+    ],
+    "description": "Decorator function"
+  },
+  "Property Getter": {
+    "prefix": "getter",
+    "body": [
+      "@property",
+      "func ${1:name}(self) -> ${2:type} {",
+      "    return self.${3:_field};",
+      "}"
+    ],
+    "description": "Property getter"
+  },
+  "Property Setter": {
+    "prefix": "setter",
+    "body": [
+      "@${1:name}.setter",
+      "func ${1:name}(self, ${2:value}: ${3:type}) {",
+      "    self.${4:_field} = ${2:value};",
+      "}"
+    ],
+    "description": "Property setter"
+  },
+  "Test Function": {
+    "prefix": "test",
+    "body": [
+      "@test",
+      "func test_${1:name}() {",
+      "    assert ${2:condition}, \"${3:message}\";",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Test function"
+  },
+  "Benchmark": {
+    "prefix": "bench",
+    "body": [
+      "@benchmark",
+      "func bench_${1:name}() {",
+      "    ${0}",
+      "}"
+    ],
+    "description": "Benchmark function"
+  },
+  "Error Handling": {
+    "prefix": "tryerr",
+    "body": [
+      "try {",
+      "    ${1}",
+      "} catch ${2:e} {",
+      "    print(\"Error:\", ${2:e});",
+      "    ${0}",
+      "} finally {",
+      "    ${3:// Cleanup}",
+      "}"
+    ],
+    "description": "Try-catch-finally with error handling"
+  },
+  "File Operations": {
+    "prefix": "fileops",
+    "body": [
+      "with open(\"${1:filename}\", \"${2:r}\") as ${3:f} {",
+      "    let ${4:content} = ${3:f}.read();",
+      "    ${0}",
+      "}"
+    ],
+    "description": "File operations with context manager"
+  },
+  "HTTP Request": {
+    "prefix": "http",
+    "body": [
+      "import http;",
+      "",
+      "let ${1:response} = http.get(\"${2:url}\");",
+      "if ${1:response}.status == 200 {",
+      "    print(${1:response}.body);",
+      "}",
+      "${0}"
+    ],
+    "description": "HTTP GET request"
+  },
+  "Web Server": {
+    "prefix": "webserver",
+    "body": [
+      "import webserver;",
+      "",
+      "let ${1:server} = webserver.Server(${2:8080});",
+      "",
+      "${1:server}.route(\"/\", func(${3:req}, ${4:res}) {",
+      "    ${4:res}.send(\"${5:Hello World}\");",
+      "});",
+      "",
+      "${1:server}.start();",
+      "${0}"
+    ],
+    "description": "Simple web server"
+  },
+  "JSON Parse": {
+    "prefix": "jsonparse",
+    "body": [
+      "import json;",
+      "",
+      "let ${1:data} = json.parse(${2:json_string});",
+      "${0}"
+    ],
+    "description": "Parse JSON"
+  },
+  "JSON Stringify": {
+    "prefix": "jsonstringify",
+    "body": [
+      "import json;",
+      "",
+      "let ${1:json_str} = json.stringify(${2:object});",
+      "${0}"
+    ],
+    "description": "Convert to JSON"
+  }
+}

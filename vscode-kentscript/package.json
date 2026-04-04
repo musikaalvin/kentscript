@@ -1,0 +1,699 @@
+{
+  "name": "vscode-kentscript",
+  "displayName": "KentScript",
+  "description": "Full IDE support for KentScript - IntelliSense, debugging, refactoring, and more",
+  "version": "3.2.0",
+  "publisher": "pylord",
+  "author": "Musika Alvin",
+  "license": "MIT",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages",
+    "Debuggers",
+    "Formatters",
+    "Linters",
+    "Themes"
+  ],
+  "activationEvents": [
+    "onLanguage:kentscript",
+    "workspaceContains:**/*.ks"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "kentscript",
+        "aliases": [
+          "KentScript",
+          "kentscript"
+        ],
+        "extensions": [
+          ".ks",
+          ".kentscript"
+        ],
+        "filenames": [
+          "main.ks",
+          "lib.ks",
+          "test.ks"
+        ],
+        "firstLine": "^#!.*kentscript",
+        "configuration": "./language-configuration.json",
+        "icon": {
+          "light": "./icon.png",
+          "dark": "./icon.png"
+        }
+      }
+    ],
+    "grammars": [
+      {
+        "language": "kentscript",
+        "scopeName": "source.kentscript",
+        "path": "./syntaxes/kentscript.tmLanguage.json"
+      }
+    ],
+    "snippets": [
+      {
+        "language": "kentscript",
+        "path": "./snippets/kentscript.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "KentScript Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/kentscript-dark.json"
+      },
+      {
+        "label": "KentScript Light",
+        "uiTheme": "vs",
+        "path": "./themes/kentscript-light.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "kentscript.run",
+        "title": "KentScript: Run",
+        "icon": "$(play)"
+      },
+      {
+        "command": "kentscript.runNative",
+        "title": "KentScript: Run Native",
+        "icon": "$(zap)"
+      },
+      {
+        "command": "kentscript.runInterpreter",
+        "title": "KentScript: Run with Interpreter",
+        "icon": "$(file-code)"
+      },
+      {
+        "command": "kentscript.runJIT",
+        "title": "KentScript: Run with JIT",
+        "icon": "$(rocket)"
+      },
+      {
+        "command": "kentscript.build",
+        "title": "KentScript: Build",
+        "icon": "$(tools)"
+      },
+      {
+        "command": "kentscript.rebuild",
+        "title": "KentScript: Rebuild",
+        "icon": "$(refresh)"
+      },
+      {
+        "command": "kentscript.compile",
+        "title": "KentScript: Compile to C",
+        "icon": "$(file-binary)"
+      },
+      {
+        "command": "kentscript.debug",
+        "title": "KentScript: Debug",
+        "icon": "$(debug-alt)"
+      },
+      {
+        "command": "kentscript.repl",
+        "title": "KentScript: REPL",
+        "icon": "$(terminal)"
+      },
+      {
+        "command": "kentscript.security",
+        "title": "KentScript: Security Audit",
+        "icon": "$(shield)"
+      },
+      {
+        "command": "kentscript.hardware",
+        "title": "KentScript: Hardware Info",
+        "icon": "$(cpu)"
+      },
+      {
+        "command": "kentscript.simd",
+        "title": "KentScript: SIMD Report",
+        "icon": "$(graph)"
+      },
+      {
+        "command": "kentscript.info",
+        "title": "KentScript: System Info",
+        "icon": "$(info)"
+      },
+      {
+        "command": "kentscript.test",
+        "title": "KentScript: Run Tests",
+        "icon": "$(beaker)"
+      },
+      {
+        "command": "kentscript.comptime",
+        "title": "KentScript: Compile-time Eval",
+        "icon": "$(flame)"
+      }
+    ],
+    "menus": {
+      "editor/title": [
+        {
+          "command": "kentscript.run",
+          "when": "resourceLangId == kentscript",
+          "group": "navigation"
+        },
+        {
+          "command": "kentscript.build",
+          "when": "resourceLangId == kentscript",
+          "group": "navigation"
+        },
+        {
+          "command": "kentscript.compile",
+          "when": "resourceLangId == kentscript",
+          "group": "navigation"
+        },
+        {
+          "command": "kentscript.debug",
+          "when": "resourceLangId == kentscript",
+          "group": "navigation"
+        }
+      ],
+      "editor/context": [
+        {
+          "command": "kentscript.run",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.runNative",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.runInterpreter",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.runJIT",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.build",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.compile",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.debug",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.repl",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.test",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        },
+        {
+          "command": "kentscript.comptime",
+          "when": "resourceLangId == kentscript",
+          "group": "kentscript"
+        }
+      ],
+      "editor/inline": [
+        {
+          "command": "kentscript.addImport",
+          "when": "resourceLangId == kentscript"
+        }
+      ],
+      "commandPalette": [
+        {
+          "command": "kentscript.run",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.runNative",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.runInterpreter",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.runJIT",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.build",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.rebuild",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.compile",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.debug",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.repl",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.security",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.hardware",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.simd",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.info",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.test",
+          "when": "resourceLangId == kentscript"
+        },
+        {
+          "command": "kentscript.comptime",
+          "when": "resourceLangId == kentscript"
+        }
+      ]
+    },
+    "keybindings": [
+      {
+        "command": "kentscript.runNative",
+        "key": "ctrl+shift+r",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.runInterpreter",
+        "key": "ctrl+shift+i",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.runJIT",
+        "key": "ctrl+shift+j",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.rebuild",
+        "key": "ctrl+shift+b",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.debug",
+        "key": "f5",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.compile",
+        "key": "ctrl+shift+c",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.format",
+        "key": "shift+alt+f",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.goToDefinition",
+        "key": "f12",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.goToDefinition",
+        "key": "ctrl+click",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.findReferences",
+        "key": "shift+f12",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.renameSymbol",
+        "key": "f2",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.findSymbol",
+        "key": "ctrl+shift+o",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.addImport",
+        "key": "ctrl+shift+i",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.showCallHierarchy",
+        "key": "shift+alt+h",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.showTypeHierarchy",
+        "key": "shift+alt+t",
+        "when": "resourceLangId == kentscript"
+      },
+      {
+        "command": "kentscript.restartLSP",
+        "key": "ctrl+shift+r",
+        "when": "resourceLangId == kentscript && !editorFocus"
+      }
+    ],
+    "breakpoints": [
+      {
+        "language": "kentscript"
+      }
+    ],
+    "configuration": {
+      "type": "object",
+      "title": "KentScript",
+      "properties": {
+        "kentscript.lsp.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable KentScript LSP"
+        },
+        "kentscript.lsp.trace.server": {
+          "type": "string",
+          "enum": [
+            "off",
+            "messages",
+            "verbose"
+          ],
+          "default": "off",
+          "description": "Traces communication between VS Code and the language server"
+        },
+        "kentscript.lsp.maxParallelWorkers": {
+          "type": "number",
+          "default": 4,
+          "description": "Maximum number of parallel workers for LSP"
+        },
+        "kentscript.format.indentSize": {
+          "type": "number",
+          "default": 4,
+          "description": "Number of spaces for indentation"
+        },
+        "kentscript.format.tabSize": {
+          "type": "number",
+          "default": 4,
+          "description": "Tab size"
+        },
+        "kentscript.format.insertSpaces": {
+          "type": "boolean",
+          "default": true,
+          "description": "Insert spaces instead of tabs"
+        },
+        "kentscript.format.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable format on save"
+        },
+        "kentscript.lint.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable linting"
+        },
+        "kentscript.lint.unusedVariables": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn about unused variables"
+        },
+        "kentscript.lint.unsafeOperations": {
+          "type": "boolean",
+          "default": true,
+          "description": "Check for unsafe operations outside unsafe blocks"
+        },
+        "kentscript.lint.implicitAny": {
+          "type": "boolean",
+          "default": true,
+          "description": "Warn about implicit any types"
+        },
+        "kentscript.completion.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable autocomplete"
+        },
+        "kentscript.completion.snippets": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable code snippets"
+        },
+        "kentscript.completion.insertSuggestion": {
+          "type": "boolean",
+          "default": true,
+          "description": "Insert selected suggestion"
+        },
+        "kentscript.semanticTokens.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable semantic tokens (syntax highlighting)"
+        },
+        "kentscript.inlayHints.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable inlay hints"
+        },
+        "kentscript.inlayHints.parameterNames": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show parameter names in inlay hints"
+        },
+        "kentscript.inlayHints.typeHints": {
+          "type": "boolean",
+          "default": true,
+          "description": "Show type hints"
+        },
+        "kentscript.navigation.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable navigation features"
+        },
+        "kentscript.refactoring.enable": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable refactoring features"
+        },
+        "kentscript.debug.showInternalFrames": {
+          "type": "boolean",
+          "default": false,
+          "description": "Show internal runtime frames in debug stack"
+        },
+        "kentscript.debug.console": {
+          "type": "string",
+          "enum": [
+            "internalConsole",
+            "externalTerminal",
+            "integratedTerminal"
+          ],
+          "default": "integratedTerminal",
+          "description": "Where to show debug output"
+        },
+        "kentscript.run.terminal": {
+          "type": "string",
+          "enum": [
+            "integratedTerminal",
+            "externalTerminal"
+          ],
+          "default": "integratedTerminal",
+          "description": "Where to run KentScript programs"
+        },
+        "kentscript.run.saveBeforeRun": {
+          "type": "boolean",
+          "default": true,
+          "description": "Save file before running"
+        },
+        "kentscript.run.buildBeforeRun": {
+          "type": "boolean",
+          "default": false,
+          "description": "Build before running (for native)"
+        },
+        "kentscript.packageManager": {
+          "type": "string",
+          "default": "kpm",
+          "description": "Package manager command"
+        },
+        "kentscript.project.templatePath": {
+          "type": "string",
+          "default": "",
+          "description": "Path to custom project templates"
+        }
+      }
+    },
+    "taskDefinitions": [
+      {
+        "type": "kentscript",
+        "required": [
+          "task"
+        ],
+        "properties": {
+          "task": {
+            "type": "string",
+            "enum": [
+              "run",
+              "build",
+              "compile",
+              "test",
+              "clean"
+            ],
+            "description": "The KentScript task to run"
+          },
+          "file": {
+            "type": "string",
+            "description": "The file to run (optional)"
+          },
+          "args": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Additional arguments"
+          }
+        }
+      }
+    ],
+    "debuggers": [
+      {
+        "type": "kentscript",
+        "label": "KentScript Debugger",
+        "languages": [
+          "kentscript"
+        ],
+        "configurationSnippets": [
+          {
+            "label": "KentScript: Launch",
+            "description": "Debug a KentScript file",
+            "body": {
+              "type": "kentscript",
+              "request": "launch",
+              "name": "Debug KentScript",
+              "program": "^\"\\${workspaceFolder}/${1:main.ks}\"",
+              "args": [],
+              "cwd": "^\"\\${workspaceFolder}\"",
+              "runtime": "kentscript",
+              "internalConsoleOptions": "neverOpen"
+            }
+          }
+        ],
+        "configurationAttributes": {
+          "launch": {
+            "required": [
+              "program"
+            ],
+            "properties": {
+              "program": {
+                "type": "string",
+                "description": "Path to the KentScript file to debug"
+              },
+              "args": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Command line arguments"
+              },
+              "cwd": {
+                "type": "string",
+                "description": "Working directory"
+              },
+              "runtime": {
+                "type": "string",
+                "default": "kentscript",
+                "description": "Runtime to use"
+              },
+              "stopOnEntry": {
+                "type": "boolean",
+                "default": true,
+                "description": "Stop at entry point"
+              },
+              "console": {
+                "type": "string",
+                "enum": [
+                  "internalConsole",
+                  "integratedTerminal",
+                  "externalTerminal"
+                ],
+                "default": "integratedTerminal",
+                "description": "Where to show debug output"
+              },
+              "env": {
+                "type": "object",
+                "description": "Environment variables"
+              }
+            }
+          },
+          "attach": {
+            "required": [],
+            "properties": {
+              "host": {
+                "type": "string",
+                "description": "Remote host"
+              },
+              "port": {
+                "type": "number",
+                "description": "Remote port"
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "test": "node ./out/test/runTest.js"
+  },
+  "devDependencies": {
+    "@types/node": "^18.19.0",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.9.3",
+    "vscode-languageclient": "^8.1.0"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^8.1.0",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  },
+  "extensionKind": [
+    "workspace"
+  ],
+  "preview": false,
+  "badges": [
+    {
+      "url": "https://img.shields.io/github/stars/musikaalvin/kentscript",
+      "href": "https://github.com/musikaalvin/kentscript",
+      "description": "GitHub stars"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/musikaalvin/kentscript.git"
+  },
+  "bugs": {
+    "url": "https://github.com/musikaalvin/kentscript/issues"
+  },
+  "homepage": "https://github.com/musikaalvin/kentscript#readme",
+  "keywords": [
+    "kentscript",
+    "language-server",
+    "lsp",
+    "debugger",
+    "ide",
+    "programming-language"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "KentScript Dark",
+  "type": "dark",
+  "colors": {
+    "editor.background": "#1e1e1e",
+    "editor.foreground": "#d4d4d4"
+  },
+  "tokenColors": [
+    {
+      "scope": "keyword.control.unsafe.kentscript,keyword.declaration.kentscript,keyword.other.kentscript",
+      "settings": { "foreground": "#c586c0" }
+    },
+    {
+      "scope": "storage.type.kentscript",
+      "settings": { "foreground": "#dcdcaa" }
+    },
+    {
+      "scope": "string.quoted.kentscript,string.interpolated.kentscript",
+      "settings": { "foreground": "#d4d4d4" }
+    },
+    {
+      "scope": "comment.line.double-colon.kentscript,comment.line.double-slash.kentscript,comment.block.kentscript",
+      "settings": { "foreground": "#ff66ff" }
+    },
+    {
+      "scope": "constant.numeric.hex.kentscript,constant.numeric.binary.kentscript,constant.numeric.octal.kentscript,constant.numeric.decimal.kentscript",
+      "settings": { "foreground": "#569cd6" }
+    },
+    {
+      "scope": "entity.name.function.kentscript,support.function.builtin.kentscript",
+      "settings": { "foreground": "#b5cea8" }
+    },
+    {
+      "scope": "support.function.unsafe.kentscript,variable.language.unsafe.kentscript",
+      "settings": { "foreground": "#ff4444" }
+    }
+  ]
+}

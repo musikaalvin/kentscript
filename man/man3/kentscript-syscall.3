@@ -1,0 +1,128 @@
+.TH KENTSCRIPT-SYSCALL 3 "KentScript Manual"
+.SH NAME
+kentscript-syscall \- KentScript system call functions
+.SH SYNOPSIS
+.B unsafe {
+.br
+let ret = syscall(60, 0);  :: exit(0)
+.br
+}
+.SH DESCRIPTION
+These functions provide direct access to system calls. They must be called from within an \fBunsafe\fR block. System call numbers vary by platform.
+.SH COMMON SYSTEM CALLS (Linux x86-64)
+.TP
+\fBsyscall(num: int, *args) -> int\fR
+Make a raw system call by number with up to 6 arguments. Returns the result or negative error code.
+.SS Process Management
+.TP
+60 - exit(status: int)\fR
+Terminate the process with given status.
+.TP
+231 - exit_group(status: int)\fR
+Exit all threads in the process.
+.TP
+57 - fork()\fR
+Create a new process. Returns 0 to child, child PID to parent.
+.TP
+59 - execve(path: *char, argv: **char, envp: **char)\fR
+Execute a program.
+.TP
+60 - wait4(pid: int, status: *int, options: int, rusage: *struct)\fR
+Wait for process to change state.
+.TP
+62 - kill(pid: int, sig: int)\fR
+Send signal to process.
+.SS File Operations
+.TP
+2 - open(path: *char, flags: int, mode: int)\fR
+Open a file. Returns file descriptor.
+.TP
+3 - close(fd: int)\fR
+Close a file descriptor.
+.TP
+0 - read(fd: int, buf: *char, count: int)\fR
+Read from file descriptor.
+.TP
+1 - write(fd: int, buf: *char, count: int)\fR
+Write to file descriptor.
+.TP
+8 - lseek(fd: int, offset: int, whence: int)\fR
+Reposition read/write file offset.
+.SS Memory Management
+.TP
+9 - mmap(addr: *void, length: int, prot: int, flags: int, fd: int, offset: int)\fR
+Map or unmap files or devices into memory.
+.TP
+11 - munmap(addr: *void, length: int)\fR
+Unmap memory.
+.TP
+10 - mprotect(addr: *void, len: int, prot: int)\fR
+Set memory protection.
+.SS Threading
+.TP
+56 - clone(flags: int, stack: *void, parent_tid: *int, child_tid: *void, tls: *void)\fR
+Create a new process/thread.
+.TP
+120 - set_tid_address(tid_ptr: *int)\fR
+Set pointer to thread ID.
+.SS Time
+.TP
+201 - clock_gettime(clock_id: int, timespec: *struct)\fR
+Get current time.
+.TP
+231 - clock_nanosleep(clock_id: int, flags: int, req: timespec, rem: timespec)\fR
+High-resolution sleep.
+.SS Networking
+.TP
+41 - socket(domain: int, type: int, protocol: int)\fR
+Create socket.
+.TP
+42 - bind(sockfd: int, addr: *sockaddr, addrlen: int)\fR
+Bind socket to address.
+.TP
+43 - listen(sockfd: int, backlog: int)\fR
+Listen for connections.
+.TP
+43 - accept(sockfd: int, addr: *sockaddr, addrlen: *int)\fR
+Accept connection.
+.TP
+42 - connect(sockfd: int, addr: *sockaddr, addrlen: int)\fR
+Connect to remote socket.
+.SS Information
+.TP
+160 - uname(buf: *utsname)\fR
+Get system information.
+.TP
+63 - getcwd(buf: *char, size: int)\fR
+Get current working directory.
+.TP
+62 - getpid()\fR
+Get process ID.
+.TP
+110 - getuid()\fR
+Get real user ID.
+.SH EXAMPLE
+unsafe {
+.br
+    :: Write to stdout (fd=1)
+    let msg = "Hello, world!\n";
+    
+    :: syscall number 1 = write
+    syscall(1, 1, msg, 15);
+    
+    
+    :: Exit with code 0 (syscall 60)
+.br
+    syscall(60, 0);
+.br
+}
+.SH NOTES
+System call numbers differ across architectures. This documentation is for Linux x86-64.
+.SH SEE ALSO
+.BR kentscript (1),
+.BR kentscript-stdlib (3),
+.BR kentscript-malloc (3)
+.SH AUTHOR
+pyLord (Musika Alvin) - Uganda
+.SH LICENSE
+MIT

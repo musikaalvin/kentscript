@@ -1,0 +1,322 @@
+.TH KENTSCRIPT-STDLIB 3 "KentScript Manual"
+.SH NAME
+kentscript-stdlib \- KentScript Standard Library
+.SH DESCRIPTION
+The KentScript standard library provides functions for memory management, file I/O, networking, threading, cryptography, and more.
+.SH MEMORY FUNCTIONS
+These functions require an \fBunsafe\fR block.
+.TP
+\fBmalloc(size: int) -> *u8\fR
+Allocate \fIsize\fR bytes of memory. Returns pointer to allocated memory.
+.br
+\fBExample:\fR unsafe { let ptr = malloc(1024); }
+.TP
+\fBfree(ptr: *u8)\fR
+Free previously allocated memory.
+.TP
+\fBrealloc(ptr: *u8, size: int) -> *u8\fR
+Reallocate memory to new size.
+.TP
+\fBcalloc(nmemb: int, size: int) -> *u8\fR
+Allocate zero-initialized memory for \fInmemb\fR elements of \fIsize\fR bytes.
+.SH POINTER FUNCTIONS
+These functions require an \fBunsafe\fR block.
+.TP
+\fBptr_read(ptr: *u8, size: int) -> int\fR
+Read \fIsize\fR bytes from pointer.
+.TP
+\fBptr_write(ptr: *u8, value: int, size: int)\fR
+Write \fIvalue\fR of \fIsize\fR bytes to pointer.
+.SH HARDWARE I/O
+These functions require an \fBunsafe\fR block.
+.TP
+\fBread_port(port: u16) -> u8\fR
+Read byte from I/O port.
+.TP
+\fBwrite_port(port: u16, value: u8)\fR
+Write byte to I/O port.
+.TP
+\fBinb(port: u16) -> u8\fR
+Read byte from port (alias for read_port).
+.TP
+\fBoutb(port: u16, value: u8)\fR
+Write byte to port (alias for write_port).
+.SH CPU INSTRUCTIONS
+These functions require an \fBunsafe\fR block.
+.TP
+\fBrdtsc() -> u64\fR
+Read timestamp counter (returns 64-bit timestamp).
+.TP
+\fBcpuid() -> dict\fR
+Get CPU information dictionary.
+.SH MEMORY MAPPING
+These functions require an \fBunsafe\fR block.
+.TP
+\fBmmap(addr: *u8, len: int, prot: int, fd: int, offset: int) -> *u8\fR
+Map memory. \fIprot\fR: 1=read, 2=write, 4=execute.
+.TP
+\fBmunmap(addr: *u8, len: int)\fR
+Unmap memory.
+.TP
+\fBmprotect(addr: *u8, len: int, prot: int)\fR
+Change memory protection.
+.SH SYSTEM CALLS
+These functions require an \fBunsafe\fR block.
+.TP
+\fBsyscall(num: int, *args) -> int\fR
+Make system call by number with arguments. Returns system call result.
+.TP
+\fBasm(code: str)\fR
+Execute inline assembly code.
+.TP
+\fBcli()\fR
+Clear interrupts (disable).
+.TP
+\fBsti()\fR
+Set interrupts (enable).
+.TP
+\fBhlt()\fR
+Halt CPU.
+.TP
+\fBpause()\fR
+Pause CPU (hint for spin-wait loops).
+.SH FILE I/O
+.TP
+\fBopen(path: str, mode: str) -> file\fR
+Open file. \fImode\fR: "r", "w", "a", "r+", "w+", "a+"
+.TP
+\fBread(file, size: int) -> str\fR
+Read up to \fIsize\fR bytes from file.
+.TP
+\fBwrite(file, data: str) -> int\fR
+Write string to file. Returns bytes written.
+.TP
+\fBclose(file)\fR
+Close file.
+.TP
+\fBseek(file, offset: int, whence: int) -> int\fR
+Seek in file. \fIwhence\fR: 0=start, 1=current, 2=end.
+.TP
+\fBtell(file) -> int\fR
+Get current file position.
+.TP
+\fBstat(path: str) -> dict\fR
+Get file statistics (size, mtime, etc.).
+.SH STRING FUNCTIONS
+.TP
+\fBlen(obj) -> int\fR
+Get length of string, list, dict, or tuple.
+.TP
+\fBconcat(*strs) -> str\fR
+Concatenate multiple strings.
+.TP
+\fBsplit(s: str, delim: str) -> list\fR
+Split string by delimiter.
+.TP
+\fBreplace(s: str, old: str, new: str) -> str\fR
+Replace all occurrences of \fIold\fR with \fInew\fR.
+.TP
+\fBtrim(s: str) -> str\fR
+Trim whitespace from both ends.
+.TP
+\fBupper(s: str) -> str\fR
+Convert to uppercase.
+.TP
+\fBlower(s: str) -> str\fR
+Convert to lowercase.
+.TP
+\fBformat(fmt: str, *args) -> str\fR
+Format string (like printf).
+.SH COLLECTION FUNCTIONS
+.TP
+\fBrange(start, stop, step=1) -> list\fR
+Create range of numbers.
+.TP
+\fBzip(*iterables) -> list\fR
+Zip multiple iterables together.
+.TP
+\fBenumerate(iterable, start=0) -> list\fR
+Enumerate iterable with indices.
+.TP
+\fBmap(func, iterable) -> list\fR
+Apply function to each element.
+.TP
+\fBfilter(func, iterable) -> list\fR
+Filter elements by function.
+.TP
+\fBreduce(func, iterable, init=0) -> any\fR
+Reduce iterable to single value.
+.TP
+\fBsort(list) -> list\fR
+Sort list in place.
+.TP
+\fBreverse(list) -> list\fR
+Reverse list in place.
+.TP
+\fBappend(list, item)\fR
+Append item to list.
+.TP
+\fBpush(list, item)\fR
+Push item to list (alias for append).
+.TP
+\fBpop(list) -> any\fR
+Pop last item from list.
+.TP
+\fBget(dict, key, default=null)\fR
+Get value from dict with default.
+.TP
+\fBkeys(dict) -> list\fR
+Get all keys from dict.
+.TP
+\fBvalues(dict) -> list\fR
+Get all values from dict.
+.TP
+\fBitems(dict) -> list\fR
+Get all key-value pairs from dict.
+.SH INPUT/OUTPUT
+.TP
+\fBprint(*args)\fR
+Print to stdout.
+.TP
+\fBprintln(*args)\fR
+Print to stdout with newline.
+.TP
+\fBinput(prompt: str = "") -> str\fR
+Read line from stdin with optional prompt.
+.TP
+\fBread_file(path: str) -> str\fR
+Read entire file into string.
+.TP
+\fBwrite_file(path: str, content: str)\fR
+Write string to file.
+.SH SYSTEM FUNCTIONS
+.TP
+\fBexit(code: int)\fR
+Exit process with code.
+.TP
+\fBsleep(seconds: float)\fR
+Sleep for specified seconds.
+.TP
+\fBtime() -> int\fR
+Get current Unix timestamp.
+.TP
+\fBdate() -> dict\fR
+Get current date as dict (year, month, day, hour, min, sec).
+.TP
+\fBsystem(cmd: str) -> int\fR
+Execute shell command. Returns exit code.
+.TP
+\fBenv(name: str) -> str\fR
+Get environment variable.
+.TP
+\fBgetcwd() -> str\fR
+Get current working directory.
+.TP
+\fBchdir(path: str)\fR
+Change current directory.
+.SH THREADING
+.TP
+\fBspawn(func, *args) -> thread\fR
+Spawn new thread executing function.
+.TP
+\fBjoin(thread)\fR
+Wait for thread to complete.
+.TP
+\fBmutex_create() -> mutex\fR
+Create new mutex.
+.TP
+\fBmutex_lock(mutex)\fR
+Lock mutex (blocks if already locked).
+.TP
+\fBmutex_unlock(mutex)\fR
+Unlock mutex.
+.SH NETWORKING
+.TP
+\fBsocket(domain: int, type: int, protocol: int) -> socket\fR
+Create socket. \fIdomain\fR: 2=IPv4, 10=IPv6. \fItype\fR: 1=stream, 2=datagram.
+.TP
+\fBbind(socket, host: str, port: int)\fR
+Bind socket to address.
+.TP
+\fBlisten(socket, backlog: int)\fR
+Listen for connections.
+.TP
+\fBaccept(socket) -> socket\fR
+Accept incoming connection.
+.TP
+\fBconnect(socket, host: str, port: int)\fR
+Connect to remote socket.
+.TP
+\fBsend(socket, data: str) -> int\fR
+Send data. Returns bytes sent.
+.TP
+\fBrecv(socket, size: int) -> str\fR
+Receive data.
+.SH TYPE FUNCTIONS
+.TP
+\fBtype_of(obj) -> str\fR
+Get type name of object.
+.TP
+\fBis_type(obj, type_name: str) -> bool\fR
+Check if object is of type.
+.TP
+\fBcopy(obj) -> any\fR
+Deep copy object.
+.TP
+\fBsizeof(type_or_value) -> int\fR
+Get size in bytes.
+.SH ERROR HANDLING
+.TP
+\fBpanic(msg: str)\fR
+Panic with message (abort execution).
+.TP
+\fBassert(cond: bool, msg: str = "")\fR
+Assert condition, panic on failure.
+.TP
+\fBtry(func, *args) -> result\fR
+Try-catch wrapper.
+.TP
+\fBcatch(result)\fR
+Get error from result.
+.TP
+\fBunwrap(result)\fR
+Unwrap result or panic.
+.SH CODE EXECUTION
+.TP
+\fBeval(code: str) -> any\fR
+Evaluate KentScript code string.
+.TP
+\fBcompile(code: str) -> func\fR
+Compile code to function.
+.SH FFI (Foreign Function Interface)
+.TP
+\fBffi_load(path: str) -> lib\fR
+Load C library by path.
+.TP
+\fBffi_call(lib, func: str, *args) -> any\fR
+Call function from loaded library.
+.SH CRYPTOGRAPHY
+.TP
+\fBhash(data: str, algorithm: str = "sha256") -> str\fR
+Hash data. Algorithms: md5, sha1, sha256, sha512, blake2b.
+.TP
+\fBhmac(key: str, data: str, algorithm: str = "sha256") -> str\fR
+Compute HMAC.
+.TP
+\fBencrypt(data: str, key: str, algorithm: str = "aes256") -> str\fR
+Encrypt data. Algorithms: aes128, aes256, chacha20.
+.TP
+\fBdecrypt(data: str, key: str, algorithm: str = "aes256") -> str\fR
+Decrypt data.
+.TP
+\fBrandom(n: int) -> int\fR
+Generate random number 0 to n-1.
+.SH SEE ALSO
+.BR kentscript (1),
+.BR kentscript-malloc (3),
+.BR kentscript-syscall (3),
+.BR kentscript-ffi (3)
+.SH AUTHOR
+pyLord (Musika Alvin) - Uganda
+.SH LICENSE
+MIT

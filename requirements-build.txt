@@ -1,0 +1,24 @@
+# KentScript Requirements
+
+# Core dependencies (all required - come with Python)
+# os, sys, re, json, time, math, types, struct, ctypes, hashlib
+# threading, subprocess, shutil, platform, tempfile, copy
+# array, socket, random, traceback, typing, enum, dataclasses
+
+# Optional dependencies (install for full functionality)
+
+# Rich - Enhanced console output with colors and formatting
+rich
+
+# Prompt Toolkit - REPL autocomplete and history
+prompt-toolkit
+
+# Pygments - Syntax highlighting in REPL
+pygments
+
+# pyinstaller - Build standalone executables
+pyinstaller>=5.0
+
+# Optional tools for advanced features
+# AArch64 cross-compiler: apt install gcc-aarch64-linux-gnu
+# QEMU (bare-metal testing): apt install qemu-system-arm

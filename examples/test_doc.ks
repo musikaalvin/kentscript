@@ -1,0 +1,10 @@
+import time;
+print(time.now());
+import fileio;
+fileio.write("/tmp/test_doc.txt", "test", "utf-8");
+print(fileio.read("/tmp/test_doc.txt", "utf-8"));
+import path;
+print(path.getsize("/tmp/test_doc.txt"));
+import network;
+let sock = network.socket_create(network.AF_INET, network.SOCK_STREAM, 0);
+print(sock);

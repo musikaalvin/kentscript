@@ -1,0 +1,126 @@
+.TH KENTSCRIPT 1 "KentScript Manual"
+.SH NAME
+kentscript \- KentScript Programming Language v3.1.0
+.SH SYNOPSIS
+.B kentscript
+[\fICOMMAND\fR] [\fIOPTIONS\fR] [\fIFILE\fR]
+.SH DESCRIPTION
+KentScript is a systems programming language written in Python (~161,000 lines), created by pyLord on 1st March 2026. It combines Python-like syntax with C-like low-level features including pointers, syscalls, and unsafe memory operations.
+
+.SH COMMANDS
+.TP
+\fBrun\fR
+Run KentScript file in interpreter mode
+.TP
+\fBbuild\fR
+Compile to native binary via C transpiler
+.TP
+\fBrepl\fR
+Start interactive REPL with autocomplete
+.TP
+\fBdebug\fR
+Debug mode with breakpoints
+.SH OPTIONS
+.TP
+\fB\-O0, \-O1, \-O2, \-O3\fR
+Optimization level (default -O2)
+.TP
+\fB\-o, \-\-output FILE\fR
+Output file name
+.TP
+\fB\-\-debug\fR
+Enable debug symbols
+.TP
+\fB\-v, \-\-version\fR
+Show version information
+.TP
+\fB\-h, \-\-help\fR
+Show help message
+.SH EXAMPLES
+.TP
+Run script:
+.B kentscript run hello.ks
+.TP
+Build binary:
+.B kentscript build program.ks -O3
+.TP
+Start REPL:
+.B kentscript repl
+.TP
+Debug:
+.B kentscript debug program.ks
+.SH LANGUAGE FEATURES
+.SS Variables
+.EX
+let x: i64 = 42;
+let mut y = 0;
+const PI = 3.14159;
+.EE
+.SS Types
+.EX
+i8, i16, i32, i64, u8, u16, u32, u64
+f32, f64
+bool, str, char, ptr, void, any
+.EE
+.SS Functions
+.EX
+func add(a: i64, b: i64) -> i64 {
+    return a + b;
+}
+.EE
+.SS Classes
+.EX
+class Point {
+    init(self, x: i64, y: i64) {
+        self.x = x;
+        self.y = y;
+    }
+}
+.EE
+.SS Unsafe Blocks
+.EX
+unsafe {
+    let ptr = malloc(1024);
+    ptr_write(ptr, 0, 42);
+    let val = ptr_read(ptr);
+    free(ptr);
+}
+.EE
+.SS System Functions
+.EX
+:: File operations
+system_file_write_text(path, content);
+system_file_read_text(path);
+system_file_stat(path);
+
+:: OS functions
+system_os_getpid();
+system_os_getppid();
+
+:: HTTP
+system_http_get(url, headers);
+system_http_post(url, headers, body);
+
+:: Encoding
+system_encoding_base64_encode(data);
+system_encoding_hex_encode(data);
+.EE
+.SH COMMENTS
+KentScript supports three comment styles:
+.EX
+:: single line comment
+/// documentation comment
+/* block comment */
+.EE
+.SH REQUIRES
+Python 3.8+ and GCC/Clang for native compilation
+.SH SEE ALSO
+.BR kentscript (1)
+.BR kentscript-unsafe (3)
+.BR kentscript-syscall (3)
+.SH AUTHOR
+pyLord (Musika Alvin) - Uganda
+.SH LICENSE
+MIT
+.SH VERSION
+KentScript v3.1.0 - Created 1st March 2026

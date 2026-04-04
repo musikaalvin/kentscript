@@ -1,0 +1,20 @@
+{
+  "name": "kentscript-lsp",
+  "version": "3.1.0",
+  "description": "Language Server Protocol implementation for KentScript",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "keywords": [
+    "kentscript",
+    "lsp",
+    "language-server"
+  ],
+  "author": "pyLord (Musika Alvin) - Uganda",
+  "license": "MIT",
+  "dependencies": {
+    "vscode-languageserver": "^8.1.0",
+    "vscode-languageserver-textdocument": "^1.0.12"
+  }
+}
