@@ -1,0 +1,9 @@
+{
+    "name": "stdlib",
+    "version": "1.0.0",
+    "description": "Standard library extensions for KentScript",
+    "author": "pyLord",
+    "license": "MIT",
+    "files": ["math_ext.ks"],
+    "dependencies": {}
+}
