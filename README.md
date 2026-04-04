@@ -26,7 +26,6 @@ chmod +x kentscript
 ## Documentation
 
 - [Full Guide](docs/KENTSCRIPT_v3.1.0_GUIDE.md)
-- [GUI Guide](docs/GUI_GUIDE.md)
 
 ## Features
 
