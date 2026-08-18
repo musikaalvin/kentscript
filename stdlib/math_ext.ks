@@ -1,4 +1,4 @@
-# Standard Library Extensions for KentScript
+:: Standard Library Extensions for KentScript
 
 func clamp(val, min_val, max_val) {
     if val < min_val { return min_val; }

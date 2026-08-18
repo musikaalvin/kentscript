@@ -1,6 +1,6 @@
 {
     "name": "http",
-    "version": "1.0.0",
+    "version": "1.1.0",
     "description": "HTTP client module for KentScript",
     "author": "pyLord",
     "license": "MIT",

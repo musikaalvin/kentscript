@@ -6,13 +6,13 @@
 packages = [
     {
         "name": "http",
-        "version": "1.0.0",
+        "version": "1.1.0",
         "description": "HTTP client module",
         "author": "pyLord"
     },
     {
         "name": "stdlib", 
-        "version": "1.0.0",
+        "version": "1.1.0",
         "description": "Standard library extensions",
         "author": "pyLord"
     }

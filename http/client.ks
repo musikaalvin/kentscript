@@ -1,4 +1,4 @@
-# HTTP Client Module for KentScript
+:: HTTP Client Module for KentScript
 
 func http_get(url) {
     return system_http_request("GET", url, "", {});
