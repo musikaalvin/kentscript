@@ -1,0 +1,14 @@
+{
+  "http": {
+    "latest": "1.1.0",
+    "versions": ["1.1.0"],
+    "files": ["client.ks"],
+    "dependencies": {}
+  },
+  "stdlib": {
+    "latest": "1.1.0",
+    "versions": ["1.1.0"],
+    "files": ["math_ext.ks"],
+    "dependencies": {}
+  }
+}
