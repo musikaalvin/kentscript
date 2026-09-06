@@ -1,0 +1,151 @@
+.TH KENTSCRIPT-FFI 3 "KentScript Manual"
+.SH NAME
+kentscript-ffi \- KentScript Foreign Function Interface
+.SH SYNOPSIS
+.B let lib = ffi_load("libc.so.6");
+.br
+let printf = ffi_call(lib, "printf", "Hello %s\\n", "World");
+.SH DESCRIPTION
+The FFI (Foreign Function Interface) allows KentScript to call functions in C libraries directly.
+.SH FUNCTIONS
+.TP
+\fBffi_load(path: str) -> lib\fR
+Load a C shared library by path. Returns a library handle.
+.br
+\fBExample:\fR let libc = ffi_load("/lib/x86_64-linux-gnu/libc.so.6");
+.TP
+\fBffi_call(lib, func: str, *args) -> any\fR
+Call a function from a loaded library. Arguments are automatically converted to C types.
+.br
+\fBExample:\fR ffi_call(libc, "printf", "Value: %d\\n", 42);
+.TP
+\fBffi_c_int(val) -> c_int\fR
+Create C integer.
+.TP
+\fBffi_c_long(val) -> c_long\fR
+Create C long.
+.TP
+\fBffi_c_float(val) -> c_float\fR
+Create C float.
+.TP
+\fBffi_c_double(val) -> c_double\fR
+Create C double.
+.TP
+\fBffi_c_char_p(val: str) -> c_char_p\fR
+Create C string (char*).
+.TP
+\fBffi_c_void_p(val: int) -> c_void_p\fR
+Create C void pointer.
+.TP
+\fBffi_c_bool(val: bool) -> c_bool\fR
+Create C boolean.
+.TP
+\fBffi_sizeof(ctype: str) -> int\fR
+Get size of C type.
+.TP
+\fBffi_addressof(obj) -> int\fR
+Get address of C object.
+.TP
+\fBffi_cast(obj, ctype: str)\fR
+Cast pointer to different type.
+.TP
+\fBffi_string(ptr, size=null) -> str\fR
+Convert C string to KentScript string.
+.TP
+\fBffi_array(ctype: str, size: int)\fR
+Create C array.
+.TP
+\fBffi_struct(fields: dict) -> struct\fR
+Create C struct.
+.TP
+\fBffi_struct_c(fields: dict, pack=null) -> struct\fR
+Create C struct with \fBrepr(C)\fR layout.
+.TP
+\fBffi_pointer(obj) -> pointer\fR
+Create C pointer.
+.TP
+\fBffi_byref(obj) -> byref\fR
+Create reference for passing to functions.
+.TP
+\fBffi_callback(restype, argtypes, func) -> callback\fR
+Create C callback from KentScript function.
+.TP
+\fBffi_call_safe(lib, func: str, argtypes: list, restype: str, *args) -> result\fR
+Call function with type checking and error handling.
+.TP
+\fBffi_parse_header(header_path: str) -> dict\fR
+Parse C header file and return type/function definitions.
+.TP
+\fBffi_generate_bindings(header_path: str, lib_path: str) -> dict\fR
+Generate FFI bindings from C header.
+.SH CALLBACKS
+FFI callbacks allow passing KentScript functions to C code:
+.TP
+Example: Create callback for qsort comparison
+.br
+func compare_int(a: *void, b: *void) -> int {
+.br
+    let av = ptr_read(a, 4);
+.br
+    let bv = ptr_read(b, 4);
+.br
+    return av - bv;
+.br
+}
+.br
+let cmp = ffi_callback(ffi_c_int(0), [ffi_c_void_p, ffi_c_void_p], compare_int);
+.SH STRUCTS
+.TP
+Creating C structs:
+.br
+let point = ffi_struct({"x": "c_int", "y": "c_int"});
+.br
+point.x = 10;
+.br
+point.y = 20;
+.SH ERROR HANDLING
+Use \fBffi_call_safe\fR for error handling:
+.TP
+let result = ffi_call_safe(libc, "printf", ["c_char_p"], "c_int", "Test %d\\n", 42);
+.br
+if result.error {
+.br
+    println("Error: " + result.error);
+.br
+} else {
+.br
+    println("Result: " + str(result.result));
+.br
+}
+.SH NOTES
+- FFI requires unsafe block for pointer operations
+- Always check return values for errors
+- Remember to free resources when done
+.SH EXAMPLE
+:: Load C library
+.br
+let libc = ffi_load("/lib/x86_64-linux-gnu/libc.so.6");
+.br
+
+:: Call printf
+.br
+unsafe {
+.br
+    ffi_call(libc, "printf", "Hello from C!\n");
+.br
+}
+.br
+
+:: Call with return value
+.br
+let result = ffi_call(libc, "atoi", "12345");
+.br
+println("Parsed: " + str(result));  :: 12345
+.SH SEE ALSO
+.BR kentscript (1),
+.BR kentscript-stdlib (3),
+.BR kentscript-malloc (3)
+.SH AUTHOR
+pyLord (Musika Alvin) - Uganda
+.SH LICENSE
+MIT

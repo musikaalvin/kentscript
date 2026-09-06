@@ -1,0 +1,503 @@
+.TH KENTSCRIPT 1 "August 2026" "KentScript v3.1.0" "User Manual"
+.SH NAME
+kentscript \- KentScript systems programming language
+.SH SYNOPSIS
+.B kentscript
+[\fICOMMAND\fR] [\fIOPTIONS\fR] [\fIFILE\fR ...]
+.br
+.B kentscript
+[\fB\-c\fR \fICODE\fR]
+.br
+.B kentscript
+.RI (no arguments)
+.SH DESCRIPTION
+KentScript is a systems programming language combining Python-like syntax with
+C-level low-level features: pointers, syscalls, unsafe memory, inline assembly,
+and bare-metal kernel development. The \fBkentscript\fR binary is the single
+entry point for running, building, debugging, and inspecting KentScript programs.
+.PP
+With no arguments, \fBkentscript\fR starts an interactive REPL with
+Tab-autocomplete and command history.
+.SH COMMANDS
+.TP
+\fBrun\fR \fIFILE\fR [\fIARGS\fR...]
+Compile and run a KentScript file in interpreter mode.
+.TP
+\fBbuild\fR \fIFILE\fR [\fB\-O\fR\fILVL\fR] [\fB\-o\fR \fIOUT\fR]
+Compile to a native binary via the C transpiler.
+.TP
+\fBdebug\fR \fIFILE\fR [\fB\-\-break\fR \fILINE\fR] [\fB\-\-stop\fR] [\fB\-\-steps\fR \fIN\fR]
+Launch the interactive step-through debugger. KentScript programs run inside a
+real debugger that pauses at breakpoints and after each statement, printing the
+current source line and live state. Set one or more breakpoints with repeated
+\fB\-\-break\fR \fILINE\fR flags (1-based line numbers), \fB\-\-stop\fR to pause
+before the first statement, or \fB\-\-steps\fR \fIN\fR to auto-stop after \fIN\fR
+steps. At the \fB(debug)\fR prompt use:
+.RS
+.TP
+\fBs\fR, \fBstep\fR
+Step into the next statement (enters function calls).
+.TP
+\fBn\fR, \fBnext\fR
+Step over the next statement (does not enter calls).
+.TP
+\fBc\fR, \fBcontinue\fR
+Resume execution until the next breakpoint or program end.
+.TP
+\fBb\fR \fILINE\fR, \fBbreak\fR \fILINE\fR
+Set a breakpoint at \fILINE\fR.
+.TP
+\fBp\fR \fIVAR\fR, \fBprint\fR \fIVAR\fR
+Print the current value of variable \fIVAR\fR.
+.TP
+\fBl\fR, \fBlocals\fR
+List all variables in the current scope.
+.TP
+\fBbt\fR
+Show the current call stack (backtrace).
+.TP
+\fBq\fR, \fBquit\fR
+End the debug session.
+.TP
+\fBh\fR, \fBhelp\fR
+Show the debugger command list.
+.RE
+.TP
+\fBinfo\fR
+Show system information (platform, CPU, memory, Python version).
+.TP
+\fBaudit\fR \fIFILE\fR
+Forensic binary audit: 10-part test ladder plus freestanding tools.
+.TP
+\fBprivilege_report\fR
+9-level truth ladder: userland to bare metal privilege analysis.
+.TP
+\fBring0\fR \fIFILE\fR [\fB\-\-arch\fR \fIARCH\fR]
+Compile to a Ring 0 kernel image.
+.TP
+\fBkernel\-dev\fR \fIFILE\fR
+Generate kernel development files: GDT, IDT, scheduler, vmem, syscall C files.
+.TP
+\fBminios\fR \fIFILE\fR
+MiniOS bare-metal OS builder (AArch64 QEMU-virt target).
+.TP
+\fBhardware\fR
+Hardware discovery, MMIO read, MSR access.
+.TP
+\fBwasm\fR \fIFILE\fR
+Compile KentScript to WebAssembly (.wasm) and execute.
+.TP
+\fBsecurity\fR
+Start the KSecurity ethical cybersecurity and penetration testing console
+(interactive: Tab-autocomplete modules/options, history recall).
+.TP
+\fBide\fR [\fB\-\-port\fR \fIPORT\fR] [\fB\-\-root\fR \fIDIR\fR]
+Launch the built-in web IDE on localhost (default port 8000).
+Professional code editor with KentScript syntax highlighting, interactive
+shell/REPL panel, LSP (completion, hover, diagnostics), file browser,
+frosted glass UI, responsive layout, state persistence, and auto port retry.
+The bottom panel has a \fBProblems\fR view (live diagnostics from the LSP and
+the server-side analyzer) and a \fBDebug Console\fR. Click the editor gutter to
+toggle a breakpoint, then use Run & Debug to start a session; the Debug Console
+shows the \fB(debug)\fR prompt where the same \fBs\fR/\fBn\fR/\fBc\fR/\fBp\fR/\fBq\fR
+commands drive the running program, with the current line highlighted inline.
+.SH OPTIONS
+.TP
+\fB\-c\fR \fICODE\fR
+Execute KentScript code directly from the command line (like \fBpython \-c\fR).
+.TP
+\fB\-O\fR\fI0\fR, \fB\-O\fR\fI1\fR, \fB\-O\fR\fI2\fR, \fB\-O\fR\fI3\fR
+Optimization level for the C transpiler (default: \-O2).
+.TP
+\fB\-o\fR, \fB\-\-output\fR \fIFILE\fR
+Specify output file name for \fBbuild\fR.
+.TP
+\fB\-\-debug\fR
+Enable debug symbols and debug output.
+.TP
+\fB\-v\fR, \fB\-\-version\fR
+Show version information.
+.TP
+\fB\-h\fR, \fB\-\-help\fR
+Show help message and exit.
+.SH LANGUAGE FEATURES
+.SS Variables
+.Ex
+let x: i64 = 42;
+let mut y = 0;
+const PI = 3.14159;
+.Ee
+.SS Types
+.Ex
+i8, i16, i32, i64, i128
+u8, u16, u32, u64, u128
+f16, f32, f64, f128
+isize, usize
+int, uint, float, bool, str, string, char, ptr, void, any
+.Ee
+.SS Functions
+.Ex
+func add(a: i64, b: i64) -> i64 {
+    return a + b;
+}
+
+async func fetch(url: str) -> str { ... }
+.Ee
+.SS Classes and Structs
+.Ex
+class Point {
+    init(self, x: i64, y: i64) {
+        self.x = x;
+        self.y = y;
+    }
+}
+
+struct Vec3 { x: f64; y: f64; z: f64; }
+.Ee
+.SS Enums and Traits
+.Ex
+enum Color { Red, Green, Blue; }
+
+trait Drawable {
+    draw();
+}
+
+impl Circle for Drawable {
+    func draw(self) { ... }
+}
+.Ee
+.SS Control Flow
+.Ex
+if x > 0 { ... } elif x < 0 { ... } else { ... }
+for i in range(10) { ... }
+while running { ... }
+match x {
+    case 1: { ... }
+    case 2: { ... }
+    default: { ... }
+}
+.Ee
+.SS Unsafe Blocks
+.Ex
+unsafe {
+    let p = malloc(1024);
+    ptr_write(p, 0, 42);
+    let v = ptr_read(p);
+    free(p);
+}
+.Ee
+.SS Borrow Checker
+.Ex
+let data = [1, 2, 3];
+let r = borrow(data, false);
+:: use r ...
+release(r);
+.Ee
+.SS Comments
+.Ex
+:: single line comment
+/// documentation comment
+/* block comment */
+.Ee
+.SH STANDARD LIBRARY
+The standard library lives in \fIstdlib/\fR and is imported with
+\fBimport\fR. All modules auto-complete in the REPL and VSCode.
+.SS Core
+.TP
+\fBimport os;\fR
+File and OS operations (getpid, mkdir, read_file, getenv, ...).
+.TP
+\fBimport math;\fR
+Math functions (sin, cos, sqrt, log, pow, ...).
+.TP
+\fBimport json;\fR
+JSON encoding/decoding (dumps, loads).
+.TP
+\fBimport datetime;\fR
+Date/time parsing and formatting.
+.TP
+\fBimport random;\fR
+Random number generation (random, randint, choice, shuffle).
+.TP
+\fBimport strings;\fR
+String manipulation (upper, lower, contains, split, replace, ...).
+.TP
+\fBimport regex;\fR
+Regular expressions (match, search, findall, sub, ...).
+.TP
+\fBimport collections;\fR
+Data structures (deque, counter, namedtuple, ordered_dict, ...).
+.TP
+\fBimport itertools;\fR
+Iteration tools (chain, product, combinations, islice, ...).
+.TP
+\fBimport functools;\fR
+Functional programming (partial, reduce, lru_cache, ...).
+.SS I/O and Networking
+.TP
+\fBimport fileio;\fR
+File I/O operations.
+.TP
+\fBimport http;\fR
+HTTP client (get, post, put, delete, stream, with_cookies).
+.TP
+\fBimport socket;\fR
+TCP/UDP socket wrapper (tcp, udp, connect, bind, listen, ...).
+.TP
+\fBimport network;\fR
+Network utilities.
+.TP
+\fBimport email;\fR
+SMTP/IMAP email client (send, fetch, IMAP mailbox access).
+.SS Web
+.TP
+\fBimport web;\fR
+Web framework \- routing with path params, CORS, sessions, file uploads, rate limiting.
+.TP
+\fBimport webui;\fR
+45+ styled UI components (hero, pricing, kanban, charts, chat, etc). Dark/light/midnight themes. No external CSS.
+.TP
+\fBimport webserver;\fR
+HTTP server with static files, directory listing, MIME detection.
+.TP
+\fBimport openapi;\fR
+OpenAPI 3.0 spec generator with path params and schemas.
+.TP
+\fBimport ide;\fR
+Built-in web IDE: professional code editor with syntax highlighting, interactive
+shell/REPL (uses real kentscript binary), LSP completion/hover/diagnostics,
+file browser, frosted glass UI, responsive layout. The bottom panel combines a
+live \fBProblems\fR view (LSP + server analyzer diagnostics) with a
+\fBDebug Console\fR; set breakpoints by clicking the gutter and drive a real
+step-through debug session via the Run & Debug controls. Launch with
+\fBkentscript ide\fR or \fBide.start()\fR.
+.TP
+\fBimport websocket;\fR
+WebSocket client and server with callbacks and broadcast.
+.TP
+\fBimport graphql;\fR
+GraphQL client (query, mutate over HTTP).
+.SS Data
+.TP
+\fBimport sqlite;\fR
+SQLite database (built\-in). connect, execute, query, transactions.
+.TP
+\fBimport postgres;\fR
+PostgreSQL driver (psycopg2\-binary). Full execute/fetch/transactions.
+.TP
+\fBimport mysql;\fR
+MySQL driver (mysql\-connector\-python). Full execute/fetch/transactions.
+.TP
+\fBimport mariadb;\fR
+MariaDB driver (falls back to mysql\-connector). Full execute/fetch.
+.TP
+\fBimport sql;\fR
+Query builder \- select, insert, update, delete, joins, aggregates. Works with all SQL backends.
+.TP
+\fBimport csv;\fR
+CSV reading/writing.
+.TP
+\fBimport excel;\fR
+XLSX read/write (no pip needed).
+.TP
+\fBimport dataframe;\fR
+Pandas-like DataFrame (filter, sort, groupby).
+.TP
+\fBimport image;\fR
+ImageMagick bridge (resize, crop, convert).
+.SS Security
+.TP
+\fBimport crypto;\fR
+Cryptography (aes, sha256, hmac, bcrypt, RSA, ...).
+.TP
+\fBimport kcrypt;\fR
+Key derivation, password hashing, XChaCha20-Poly1305 AEAD.
+.TP
+\fBimport security;\fR
+Security utilities.
+.TP
+\fBimport jwt;\fR
+JWT encode/decode (HS256).
+.SS System
+.TP
+\fBimport hardware;\fR
+Hardware I/O, CPU info, serial, MMIO.
+.TP
+\fBimport syscall;\fR
+Low-level syscall interface.
+.TP
+\fBimport memory;\fR
+Memory management (mmap, mprotect, mlock).
+.TP
+\fBimport ffi;\fR
+Foreign function interface (dlopen, dlsym, ...).
+.TP
+\fBimport subprocess;\fR
+Subprocess execution (run, popen, check_call, ...).
+.TP
+\fBimport asyncio;\fR
+Async I/O operations.
+.TP
+\fBimport system;\fR
+System info (platform, python_version, cpu_count, ...).
+.SS Utilities
+.TP
+\fBimport logging;\fR
+Logging framework with handlers (RotatingFileHandler, JsonFormatter).
+.TP
+\fBimport dotenv;\fR
+Load .env configuration files (load, get, set, save).
+.TP
+\fBimport template;\fR
+Template engine (render, render_file, jinja2-style).
+.TP
+\fBimport argparse;\fR
+Command-line argument parsing.
+.TP
+\fBimport config;\fR
+Configuration file handling.
+.TP
+\fBimport compression;\fR
+Gzip, Zlib, LZMA compress/decompress.
+.TP
+\fBimport encoding;\fR
+Base64, Hex, URL encoding.
+.TP
+\fBimport cache;\fR
+In-memory cache with TTL.
+.TP
+\fBimport ratelimit;\fR
+Token-bucket rate limiter.
+.TP
+\fBimport testing;\fR
+Unit testing utilities (assert_equal, fixture, mock, ...).
+.TP
+\fBimport watcher;\fR
+File/directory change watcher.
+.TP
+\fBimport scheduler;\fR
+Task scheduler via background thread.
+.TP
+\fBimport progress;\fR
+Progress bars, spinner, tqdm.
+.TP
+\fBimport color;\fR
+ANSI terminal colors.
+.TP
+\fBimport tui;\fR
+ASCII tables, confirm/choose prompts.
+.TP
+\fBimport markdown;\fR
+Markdown to HTML conversion.
+.TP
+\fBimport docker;\fR
+Docker SDK via CLI bridge.
+.TP
+\fBimport ssh;\fR
+SSH client via subprocess bridge.
+.TP
+\fBimport rich_progress;\fR
+Rich progress bars with colors and formatting.
+.TP
+\fBimport fileproc;\fR
+AWK-style file processor (read_lines, grep, ...).
+.TP
+\fBimport pathlib;\fR
+Object-oriented path manipulation.
+.TP
+\fBimport path;\fR
+File path utilities (join, basename, dirname, ext).
+.TP
+\fBimport validation;\fR
+Input/data validation.
+.TP
+\fBimport dataclass;\fR
+Data class definitions.
+.TP
+\fBimport enum;\fR
+Enum definitions.
+.TP
+\fBimport error;\fR
+Error handling utilities.
+.TP
+\fBimport parser;\fR
+Parser utilities.
+.TP
+\fBimport compiler;\fR
+Compiler internals.
+.TP
+\fBimport safe;\fR
+Safe mode utilities.
+.TP
+\fBimport struct_utils;\fR
+Struct packing/unpacking.
+.TP
+\fBimport asm;\fR
+Inline assembly.
+.TP
+\fBimport assembly;\fR
+Assembly helpers.
+.TP
+\fBimport accel;\fR
+Hardware acceleration.
+.TP
+\fBimport bitwise;\fR
+Bitwise operations.
+.TP
+\fBimport iterators;\fR
+Iterator utilities.
+.SH EXAMPLES
+.TP
+Run a script:
+.B kentscript run hello.ks
+.TP
+Build a binary:
+.B kentscript build program.ks \-O3
+.TP
+Build for bare metal:
+.B kentscript ring0 kernel.ks \-\-arch aarch64
+.TP
+Run inline code:
+.B kentscript \-c 'print("hello from KentScript")'
+.TP
+Start the REPL:
+.B kentscript
+.TP
+Start the security console:
+.B kentscript security
+.TP
+Launch the built-in web IDE:
+.B kentscript ide
+.TP
+Launch IDE on custom port:
+.B kentscript ide \-\-port 3000
+.TP
+Debug with breakpoints:
+.B kentscript debug program.ks \-\-break 10
+.TP
+Show system info:
+.B kentscript info
+.SH ENVIRONMENT
+.TP
+.B KENTSCRIPT_ROOT
+Override the KentScript installation root directory.
+.SH FILES
+.TP
+.I ~/.kentscript_history
+REPL command history file.
+.TP
+.I stdlib/*.ks
+Standard library modules (auto-discovered).
+.SH REQUIREMENTS
+Python 3.8+ and GCC/Clang for native compilation.
+.SH SEE ALSO
+.BR kentscript\-ffi (3),
+.BR kentscript\-malloc (3),
+.BR kentscript\-stdlib (3),
+.BR kentscript\-syscall (3)
+.SH AUTHOR
+pyLord (Musika Alvin) \- Uganda
+.SH LICENSE
+MIT
+.SH VERSION
+KentScript v3.1.0 \- Created 19th February 2026

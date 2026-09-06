@@ -1,0 +1,43 @@
+# KentScript v3.1.0 — Requirements
+# Install: pip install -r requirements.txt
+
+# ── Core ────────────────────────────────────────────────────────────
+rich>=13.0                   # Console output, panels, tables, syntax highlighting
+prompt-toolkit[pygments]>=3.0 # REPL autocomplete, history, Pygments lexer integration
+pygments>=2.15                # Syntax highlighting (KentScript lexer)
+
+# ── Crypto ──────────────────────────────────────────────────────────
+pynacl>=1.5.0                # XChaCha20-Poly1305 AEAD encryption (kcrypt module)
+
+# ── Network / HTTP ──────────────────────────────────────────────────
+requests>=2.31               # HTTP client (http, network, web modules)
+dnspython>=2.4               # DNS resolution (network module)
+websocket-client>=1.6        # WebSocket client
+websockets>=12.0             # WebSocket server
+
+# ── Database ────────────────────────────────────────────────────────
+psycopg2-binary>=2.9         # PostgreSQL driver (postgres module)
+mariadb>=1.1                 # MariaDB driver (mariadb module, falls back to mysql-connector)
+pymongo>=4.6                 # MongoDB driver (mongodb module)
+redis>=5.0                   # Redis driver (redis module)
+
+# ── System / Hardware ───────────────────────────────────────────────
+xattr>=0.10                  # Extended file attributes (network module, macOS/Linux)
+networkx>=3.0                # Static dispatch optimizer (tools/optimize/)
+termcolor>=2.0               # Colored debugger output (runtime/debug/)
+
+# ── Build tools ─────────────────────────────────────────────────────
+pyinstaller>=5.0             # Build standalone Windows executables
+
+# ── Optional (heavy) ────────────────────────────────────────────────
+# Uncomment as needed:
+# mysql-connector-python>=8.0  # MySQL driver (mysql module, alternative to mariadb)
+# openpyxl>=3.1               # Excel support alternative
+# Pillow>=10.0                # Image processing alternative
+# numpy>=1.24                 # Numerical computing
+
+# ── System dependencies (install separately) ────────────────────────
+# Linux:   sudo apt install gcc-aarch64-linux-gnu qemu-system-arm
+# macOS:   xcode-select --install  (provides clang)
+# Windows: pip install pyinstaller, then pyinstaller kentscript.spec
+# WASM:    apt install wabt  (for wat2wasm)

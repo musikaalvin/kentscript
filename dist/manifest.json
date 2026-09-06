@@ -1,0 +1,12 @@
+{
+    "version": "3.1.0",
+    "build_date": "2026-09-06",
+    "name": "KentScript",
+    "platforms": {
+        "linux": {
+            "file": "kentscript",
+            "size_mb": 7.01,
+            "sha256": "430b6524946403e55563ad25935d7eef7ae5f4a88ef94210b60ecaba32d9d0d1"
+        }
+    }
+}

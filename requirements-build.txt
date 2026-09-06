@@ -1,0 +1,28 @@
+# KentScript v3.1.0 — Requirements
+# Install: pip install -r requirements-build.txt
+
+# ── Core ────────────────────────────────────────────────────────────
+rich                    # Console output, panels, tables, syntax highlighting
+prompt-toolkit[pygments] # REPL autocomplete, history, Pygments lexer integration
+pygments               # Syntax highlighting (KentScript lexer)
+
+# ── Crypto ──────────────────────────────────────────────────────────
+pynacl                  # XChaCha20-Poly1305 AEAD encryption (kcrypt module)
+
+# ── Network ─────────────────────────────────────────────────────────
+requests                # HTTP client (http, network, web modules)
+dnspython               # DNS resolution (network module)
+
+# ── System / Hardware ───────────────────────────────────────────────
+xattr                   # Extended file attributes (network module, macOS/Linux)
+networkx                # Static dispatch optimizer (tools/optimize/)
+termcolor               # Colored debugger output (runtime/debug/)
+
+# ── Build tools ─────────────────────────────────────────────────────
+pyinstaller>=5.0        # Build standalone Windows executables
+
+# ── System dependencies (install separately) ────────────────────────
+# Linux:   sudo apt install gcc-aarch64-linux-gnu qemu-system-arm
+# macOS:   xcode-select --install  (provides clang)
+# Windows: pip install pyinstaller, then pyinstaller kentscript.spec
+# WASM:    apt install wabt  (for wat2wasm)

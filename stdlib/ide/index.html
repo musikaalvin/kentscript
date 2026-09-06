@@ -1,0 +1,569 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=5.0"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="KentScript IDE"/>
+<title>KentScript IDE</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+<style>
+/* ── CSS Variables ───────────────────────────────────────────── */
+:root,[data-theme="dark"]{
+  --bg-dark:#1e1e1e;--bg-mid:#252526;--bg-light:#2d2d2d;--bg-hover:#2a2d2e;
+  --border:#3c3c3c;--border-light:#454545;--accent:#007acc;--text:#cccccc;
+  --text-dim:#969696;--text-bright:#ffffff;--text-green:#6a9955;
+  --text-blue:#569cd6;--text-yellow:#dcdcaa;--text-red:#f44747;
+  --activity-bg:#333333;--statusbar-bg:#007acc;--tab-active:#1e1e1e;
+  --tab-inactive:#2d2d2d;--panel-bg:#1e1e1e;--scrollbar:#424242;
+  --input-bg:#3c3c3c;--menu-bg:#252526;--shadow:rgba(0,0,0,.5);
+  --titlebar-bg:#3c3333;--bg-panel:#252526;--hover:#2a2d2e;--bg-tabs:#2d2d2d;
+}
+[data-theme="light"]{
+  --bg-dark:#ffffff;--bg-mid:#f3f3f3;--bg-light:#ececec;--bg-hover:#e8e8e8;
+  --border:#d4d4d4;--border-light:#c8c8c8;--text:#333333;--text-dim:#717171;
+  --text-bright:#000000;--activity-bg:#ecf0f3;--tab-active:#ffffff;
+  --tab-inactive:#ececec;--panel-bg:#ffffff;--scrollbar:#c1c1c1;
+  --input-bg:#ffffff;--menu-bg:#f3f3f3;--shadow:rgba(0,0,0,.2);
+  --titlebar-bg:#dddddd;--accent:#007acc;--text-red:#d32f2f;
+  --text-green:#388e3c;--text-blue:#1565c0;--text-yellow:#f57f17;
+  --statusbar-bg:#007acc;--border-light:#c8c8c8;--bg-panel:#f3f3f3;
+  --hover:#e8e8e8;--bg-tabs:#ececec;
+}
+
+/* ── Reset ───────────────────────────────────────────────────── */
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;font-family:'Segoe UI',system-ui,sans-serif;
+  font-size:13px;background:var(--bg-dark);color:var(--text);}
+button{cursor:pointer;border:none;background:none;color:inherit;font:inherit;}
+
+/* Allow text selection by touch/drag in editor, REPL and terminal inputs.
+   Monaco blocks native selection by default; re-enable it so long-press +
+   drag works on mobile, and so the Edit menu Copy/Cut/Paste is useful. */
+.monaco-editor, .monaco-editor .view-lines, .monaco-editor .view-line,
+.monaco-editor textarea.inputarea,
+#repl-input, #terminal-input, textarea, input {
+  -webkit-user-select: text !important;
+  -moz-user-select: text !important;
+  user-select: text !important;
+  -webkit-touch-callout: default !important;
+  touch-action: auto;
+}
+input,select,textarea{font:inherit;background:var(--input-bg);color:var(--text);
+  border:1px solid var(--border);outline:none;}
+::-webkit-scrollbar{width:8px;height:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+::-webkit-scrollbar-thumb{background:var(--scrollbar);border-radius:4px;}
+.hidden{display:none!important;}
+
+/* ── App shell ───────────────────────────────────────────────── */
+#app{display:flex;flex-direction:column;height:100vh;width:100vw;}
+
+/* ── Title bar + menubar ─────────────────────────────────────── */
+#titlebar{height:30px;min-height:30px;background:var(--titlebar-bg);
+  display:flex;align-items:center;padding:0 8px;gap:6px;
+  border-bottom:1px solid var(--border);user-select:none;flex-shrink:0;}
+#titlebar .title-logo{font-weight:700;font-size:12px;color:var(--text-bright);
+  letter-spacing:.5px;white-space:nowrap;}
+#menubar{display:flex;align-items:center;gap:0;flex:1;height:100%;}
+#menubar .menu-item{height:100%;}
+#menubar .menu-item>button{padding:0 10px;height:100%;}
+#titlebar .title-right{display:flex;align-items:center;gap:6px;margin-left:auto;}
+#theme-toggle-btn{padding:3px 8px;border-radius:3px;font-size:12px;
+  background:var(--bg-light);border:1px solid var(--border);color:var(--text);}
+#theme-toggle-btn:hover{background:var(--bg-hover);}
+
+/* ── Workspace ───────────────────────────────────────────────── */
+#workspace{display:flex;flex-direction:row;flex:1;overflow:hidden;}
+
+/* ── Activity bar ────────────────────────────────────────────── */
+#activitybar{width:48px;min-width:48px;background:var(--activity-bg);
+  display:flex;flex-direction:column;align-items:center;padding-top:4px;
+  border-right:1px solid var(--border);flex-shrink:0;}
+.activity-icon{width:40px;height:40px;border-radius:4px;display:flex;
+  align-items:center;justify-content:center;font-size:18px;color:var(--text-dim);
+  margin-bottom:2px;}
+.activity-icon:hover,.activity-icon.active{color:var(--text-bright);}
+.activity-icon.active{border-left:2px solid var(--accent);}
+
+/* ── Sidebar ─────────────────────────────────────────────────── */
+#sidebar{width:260px;min-width:80px;max-width:600px;background:var(--bg-mid);
+  display:flex;flex-direction:column;border-right:1px solid var(--border);
+  flex-shrink:0;overflow:hidden;}
+#sidebar.collapsed{display:none;}
+#sidebar-inner{flex:1;display:flex;flex-direction:column;overflow:hidden;}
+.sidebar-content{flex:1;overflow-y:auto;overflow-x:hidden;}
+.panel-title{font-size:11px;text-transform:uppercase;font-weight:700;
+  letter-spacing:.06em;color:var(--text-dim);flex-shrink:0;}
+
+/* ── Sidebar resize ──────────────────────────────────────────── */
+#sidebar-resize{width:7px;background:var(--border);cursor:col-resize;
+  flex-shrink:0;transition:background .15s;touch-action:none;position:relative;}
+#sidebar-resize::before{content:'';position:absolute;top:0;bottom:0;left:-7px;right:-7px;}
+#sidebar-resize::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:3px;height:36px;border-radius:2px;background:var(--text-dim);opacity:.55;}
+#sidebar-resize:hover,#sidebar-resize.dragging{background:var(--accent);}
+#sidebar-resize:hover,#sidebar-resize.dragging{background:var(--accent);}
+
+/* ── Editor area ─────────────────────────────────────────────── */
+#editor-area{flex:1;display:flex;flex-direction:column;overflow:hidden;
+  background:var(--bg-dark);}
+#editor-groups{flex:1;display:flex;flex-direction:row;overflow:hidden;min-height:0;}
+.editor-group{flex:1;min-width:100px;display:flex;flex-direction:column;
+  position:relative;overflow:hidden;}
+.editor-group .tab-bar{display:flex;align-items:flex-end;overflow-x:auto;
+  overflow-y:hidden;border-bottom:1px solid var(--border);flex-shrink:0;
+  min-height:35px;background:var(--bg-tabs);}
+.editor-group .breadcrumb-bar{height:22px;background:var(--bg-dark);
+  display:flex;align-items:center;padding:0 8px;gap:2px;flex-shrink:0;
+  border-bottom:1px solid var(--border);overflow:hidden;color:var(--text-dim);
+  font-size:12px;}
+.editor-group .monaco-wrap{flex:1;min-height:0;position:relative;overflow:hidden;}
+
+/* ── Tab bar ─────────────────────────────────────────────────── */
+.tab{display:flex;align-items:center;gap:6px;padding:0 12px;height:34px;
+  background:var(--tab-inactive);border-right:1px solid var(--border);
+  cursor:pointer;white-space:nowrap;flex-shrink:0;font-size:12px;
+  color:var(--text-dim);border-top:2px solid transparent;}
+.tab:hover{background:var(--bg-hover);color:var(--text);}
+.tab.active{background:var(--tab-active);color:var(--text);border-top-color:var(--accent);}
+.tab .tab-close{font-size:10px;padding:1px 3px;border-radius:2px;
+  color:var(--text-dim);opacity:0;}
+.tab:hover .tab-close,.tab.active .tab-close{opacity:1;}
+.tab .tab-close:hover{background:var(--bg-hover);color:var(--text-red);}
+
+/* ── Breadcrumb ──────────────────────────────────────────────── */
+#breadcrumb{height:24px;min-height:24px;background:var(--bg-dark);
+  display:flex;align-items:center;padding:0 12px;gap:4px;font-size:12px;
+  color:var(--text-dim);border-bottom:1px solid var(--border);flex-shrink:0;
+  overflow:hidden;white-space:nowrap;}
+#breadcrumb span{cursor:pointer;}
+#breadcrumb span:hover{color:var(--text);}
+#breadcrumb .bc-sep{color:var(--text-dim);padding:0 2px;}
+
+/* ── Monaco wrap ─────────────────────────────────────────────── */
+#monaco-wrap{flex:1;overflow:hidden;position:relative;}
+#monaco-editor{width:100%;height:100%;}
+
+/* ── Panel resize ────────────────────────────────────────────── */
+#panel-resize{height:7px;background:var(--border);cursor:row-resize;
+  flex-shrink:0;transition:background .15s;touch-action:none;position:relative;}
+#panel-resize::before{content:'';position:absolute;left:0;right:0;top:-7px;bottom:-7px;}
+#panel-resize::after{content:'';position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  width:36px;height:3px;border-radius:2px;background:var(--text-dim);opacity:.55;}
+#panel-resize:hover,#panel-resize.dragging{background:var(--accent);}
+#panel-resize:hover,#panel-resize.dragging{background:var(--accent);}
+
+/* ── Bottom panel ────────────────────────────────────────────── */
+#bottom-panel{height:220px;min-height:60px;max-height:70vh;
+  background:var(--panel-bg);border-top:1px solid var(--border);
+  display:flex;flex-direction:column;flex-shrink:0;}
+#panel-tabs{height:35px;display:flex;align-items:center;
+  background:var(--bg-light);border-bottom:1px solid var(--border);padding-right:4px;}
+.panel-tab{padding:0 14px;height:34px;display:flex;align-items:center;
+  font-size:12px;color:var(--text-dim);cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;}
+.panel-tab:hover{color:var(--text);}
+.panel-tab.active{color:var(--text);border-bottom-color:var(--accent);}
+.panel-spacer{flex:1;}
+.panel-btn{width:28px;height:28px;display:flex;align-items:center;
+  justify-content:center;color:var(--text-dim);border-radius:3px;font-size:12px;}
+.panel-btn:hover{background:var(--bg-hover);color:var(--text);}
+.panel-view{flex:1;display:none;flex-direction:column;overflow:hidden;
+  padding:6px 10px;font-family:'Cascadia Code','Consolas','Courier New',monospace;
+  font-size:12px;min-height:0;}
+.panel-view.active{display:flex;}
+.term-scroll{flex:1;overflow-y:auto;padding:2px 4px;white-space:pre-wrap;
+  word-break:break-all;color:var(--text);font-family:inherit;font-size:12px;}
+.t-system{color:var(--text-dim);}
+.t-output{color:var(--text);}
+.t-input{color:var(--text-blue);}
+.t-error{color:var(--text-red);}
+#terminal-input-row,#repl-input-row{display:flex;align-items:center;gap:6px;
+  padding-top:4px;border-top:1px solid var(--border);flex-shrink:0;}
+#term-prompt-label,#repl-prompt-label{color:var(--text-green);font-size:11px;
+  white-space:nowrap;}
+#term-cwd-label{color:var(--text-dim);font-size:11px;white-space:nowrap;
+  overflow:hidden;text-overflow:ellipsis;max-width:240px;}
+#terminal-input,#repl-input{flex:1;background:transparent;border:none;
+  color:var(--text);font:inherit;padding:2px 0;caret-color:var(--text);}
+#problems-list,#output-log,#debug-content{flex:1;overflow-y:auto;}
+
+/* Realtime editor error banner (KDevelop-style syntax analysis popup) */
+.editor-error-banner{display:flex;align-items:center;gap:8px;padding:6px 12px;
+  font-size:12px;line-height:1.4;border-left:3px solid var(--text-red);
+  background:rgba(220,38,38,0.12);color:var(--text);cursor:pointer;flex-shrink:0;
+  word-break:break-word;}
+.editor-error-banner.warning{border-left-color:#cca700;background:rgba(204,167,0,0.12);}
+.editor-error-banner #err-banner-icon{font-size:13px;flex-shrink:0;}
+.editor-error-banner.warning #err-banner-icon{color:#cca700;}
+.editor-error-banner:not(.warning) #err-banner-icon{color:var(--text-red);}
+.editor-error-banner #err-banner-pos{margin-left:auto;color:var(--text-dim);
+  white-space:nowrap;flex-shrink:0;padding-left:10px;}
+
+/* REPL autocomplete dropdown */
+#repl-input-row{position:relative;}
+.repl-suggest{position:absolute;bottom:100%;left:0;right:0;max-height:160px;
+  overflow-y:auto;background:var(--bg-light);border:1px solid var(--border);
+  border-radius:4px;margin-bottom:4px;box-shadow:0 4px 16px var(--shadow);z-index:50;}
+.repl-suggest-item{padding:4px 10px;font-size:12px;font-family:monospace;cursor:pointer;
+  color:var(--text);}
+.repl-suggest-item.selected,.repl-suggest-item:hover{background:var(--accent);color:#fff;}
+
+/* ── Status bar ──────────────────────────────────────────────── */
+#statusbar{height:24px;min-height:24px;background:var(--statusbar-bg);
+  display:flex;align-items:center;padding:0 8px;gap:2px;
+  font-size:11px;flex-shrink:0;z-index:100;}
+.status-item{padding:0 6px;height:24px;display:flex;align-items:center;gap:4px;
+  color:rgba(255,255,255,.85);cursor:pointer;white-space:nowrap;border-radius:3px;}
+.status-item:hover{background:rgba(255,255,255,.15);}
+.status-item i{font-size:11px;}
+.status-spacer{flex:1;}
+.hide-mobile{display:flex;}
+
+/* ── Overlays ────────────────────────────────────────────────── */
+.overlay{position:fixed;inset:0;z-index:1000;display:none;
+  background:rgba(0,0,0,.45);align-items:flex-start;justify-content:center;}
+.overlay.open{display:flex;}
+.overlay-box{background:var(--bg-mid);border:1px solid var(--border);
+  border-radius:6px;box-shadow:0 8px 32px var(--shadow);
+  margin-top:15vh;width:600px;max-width:95vw;overflow:hidden;}
+.overlay-input{width:100%;padding:10px 16px;font-size:14px;
+  background:var(--bg-mid);border:none;border-bottom:1px solid var(--border);
+  color:var(--text);}
+.overlay-list{max-height:360px;overflow-y:auto;}
+.overlay-item{padding:8px 16px;cursor:pointer;display:flex;align-items:center;gap:10px;}
+.overlay-item:hover,.overlay-item.sel{background:var(--bg-hover);}
+.overlay-item .oi-label{flex:1;color:var(--text);}
+.overlay-item .oi-detail{font-size:11px;color:var(--text-dim);}
+.cmd-item{border-radius:2px;}
+.cmd-item.focused{background:var(--bg-hover);}
+
+/* ── Settings overlay ────────────────────────────────────────── */
+#settings-overlay{position:fixed;inset:0;z-index:1000;display:none;
+  background:rgba(0,0,0,.45);}
+#settings-overlay.open{display:flex;flex-direction:column;}
+#settings-header{padding:10px 20px;background:var(--bg-mid);
+  border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;}
+#settings-header h2{font-size:16px;font-weight:400;flex:1;}
+#settings-close{font-size:18px;color:var(--text-dim);padding:4px 8px;}
+#settings-close:hover{color:var(--text);}
+#settings-body{display:flex;flex:1;overflow:hidden;}
+#settings-nav{width:220px;background:var(--bg-mid);border-right:1px solid var(--border);
+  overflow-y:auto;padding:8px 0;}
+.settings-nav-item{padding:8px 20px;cursor:pointer;font-size:13px;color:var(--text-dim);}
+.settings-nav-item:hover,.settings-nav-item.active{background:var(--bg-hover);color:var(--text);}
+#settings-content{flex:1;overflow-y:auto;padding:24px 32px;}
+
+/* ── Context menu ────────────────────────────────────────────── */
+#ctx-menu{position:fixed;background:var(--menu-bg);border:1px solid var(--border);
+  border-radius:4px;box-shadow:0 4px 16px var(--shadow);z-index:9998;
+  display:none;min-width:180px;}
+#ctx-menu.open{display:block;}
+.ctx-item{padding:6px 16px;cursor:pointer;font-size:12px;color:var(--text);}
+.ctx-item:hover{background:var(--bg-hover);}
+.ctx-sep{height:1px;background:var(--border);margin:3px 0;}
+
+/* ── Notifications ───────────────────────────────────────────── */
+#notifications{position:fixed;bottom:28px;right:16px;z-index:9000;
+  display:flex;flex-direction:column-reverse;gap:8px;pointer-events:none;}
+.notif{background:var(--bg-mid);border:1px solid var(--border);
+  border-radius:5px;padding:10px 14px;min-width:260px;max-width:380px;
+  box-shadow:0 4px 14px var(--shadow);pointer-events:all;
+  animation:notifIn .2s ease;}
+.notif.error{border-left:3px solid var(--text-red);}
+.notif.warn{border-left:3px solid var(--text-yellow);}
+.notif.success{border-left:3px solid var(--text-green);}
+.notif.info{border-left:3px solid var(--accent);}
+@keyframes notifIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+/* ── Keys overlay table ──────────────────────────────────────── */
+#keys-overlay .overlay-box{max-height:80vh;overflow:hidden;display:flex;flex-direction:column;}
+#keys-filter-input{width:100%;padding:10px 16px;font-size:14px;
+  background:var(--bg-mid);border:none;border-bottom:1px solid var(--border);color:var(--text);}
+#keys-list{flex:1;overflow-y:auto;padding:8px 16px;}
+.keys-table{width:100%;border-collapse:collapse;font-size:12px;}
+.keys-table th{text-align:left;padding:8px 16px;background:var(--bg-light);
+  border-bottom:1px solid var(--border);font-weight:600;color:var(--text-bright);}
+.keys-table td{padding:7px 16px;border-bottom:1px solid var(--border);}
+.keys-table td kbd{background:var(--bg-light);border:1px solid var(--border);
+  border-radius:3px;padding:1px 5px;font-size:11px;}
+
+/* ── Mobile ──────────────────────────────────────────────────── */
+#sidebar-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);
+  z-index:199;}
+#mobile-fab,#sidebar-toggle-btn{display:none;position:fixed;bottom:36px;left:8px;
+  width:44px;height:44px;border-radius:50%;background:var(--accent);
+  color:#fff;font-size:18px;z-index:201;box-shadow:0 2px 8px var(--shadow);
+  align-items:center;justify-content:center;}
+
+/* ── Mobile / touch fixes ──────────────────────────────────── */
+* { -webkit-tap-highlight-color: transparent; }
+html, body { -webkit-text-size-adjust: 100%; }
+/* Stop the AUTOMATIC focus-zoom (typing) by keeping every form control
+   >= 16px — browsers only auto-zoom focused inputs below 16px. Manual
+   pinch-zoom is still allowed (see viewport meta). */
+input, textarea, select,
+.monaco-editor textarea, .monaco-editor textarea.inputarea { font-size: 16px !important; }
+#editor-area, #bottom-panel, #statusbar, #titlebar, #workspace { max-width: 100vw; }
+#menubar { overflow: visible; }
+
+@media(max-width:768px){
+  /* Show the FULL IDE inline; the user pinch-zooms where needed. */
+  #menubar{overflow-x:auto;}
+  #activitybar{width:48px;min-width:48px;overflow:hidden;}
+  #sidebar{position:relative;transform:none;width:44vw;max-width:340px;min-width:150px;height:100%;}
+  #sidebar-resize{display:block;}
+  #mobile-fab{display:none;}
+  #sidebar-overlay{display:none;}
+  .hide-mobile{display:none!important;}
+  .overlay-box{margin-top:5vh;width:95vw;}
+  #titlebar .title-logo{display:none;}
+  #statusbar{flex-wrap:wrap;height:auto;min-height:24px;}
+  /* Settings overlay: stack nav on top so it fits narrow screens */
+  #settings-body{flex-direction:column;}
+  #settings-nav{width:100%;max-height:38vh;flex-direction:row;overflow-x:auto;}
+   #settings-content{padding:16px 20px;}
+}
+/* Debugger breakpoint + current-line glyphs */
+.ks-breakpoint::before{
+  content:'';display:block;width:11px;height:11px;margin:3px auto 0;
+  border-radius:50%;background:var(--text-red);
+  box-shadow:0 0 0 2px var(--bg-dark);cursor:pointer;
+}
+.debug-current-line{background:rgba(255,200,0,0.18);}
+ .debug-current-line-glyph::before{
+   content:'';display:block;width:0;height:0;margin:4px auto 0;
+   border-top:5px solid transparent;border-bottom:5px solid transparent;
+   border-left:9px solid var(--text-yellow);
+ }
+/* ── Enlarge + color fold (collapse) controls (visible on phone) ── */
+.monaco-editor .margin-view-overlays .folding{
+  width:22px !important;height:22px !important;cursor:pointer;
+}
+.monaco-editor .margin-view-overlays .codicon.codicon-folding-collapsed,
+.monaco-editor .margin-view-overlays .codicon.codicon-folding-expanded{
+  font-size:18px !important;color:#4fc3f7 !important;opacity:1 !important;
+}
+.monaco-editor .margin-view-overlays .codicon.codicon-folding-collapsed:hover,
+.monaco-editor .margin-view-overlays .codicon.codicon-folding-expanded:hover{
+  color:#7fdfff !important;
+}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- Title bar + menubar -->
+  <div id="titlebar">
+    <span class="title-logo"><i class="fa-solid fa-code"></i> KentScript</span>
+    <div id="menubar" class="title-menus"></div>
+    <div class="title-right">
+      <button id="theme-toggle-btn" title="Toggle Theme"><i class="fa-solid fa-circle-half-stroke"></i> Theme</button>
+    </div>
+  </div>
+
+  <!-- Workspace -->
+  <div id="workspace">
+
+    <!-- Activity bar -->
+    <div id="activitybar">
+      <button class="activity-icon active" data-view="explorer" title="Explorer (Ctrl+Shift+E)"><i class="fa-solid fa-folder-tree"></i></button>
+      <button class="activity-icon" data-view="search" title="Search (Ctrl+Shift+F)"><i class="fa-solid fa-magnifying-glass"></i></button>
+      <button class="activity-icon" data-view="git" title="Source Control (Ctrl+Shift+G)"><i class="fa-solid fa-code-branch"></i></button>
+      <button class="activity-icon" data-view="debug" title="Run &amp; Debug (Ctrl+Shift+D)"><i class="fa-solid fa-play"></i></button>
+      <button class="activity-icon" data-view="extensions" title="Extensions (Ctrl+Shift+X)"><i class="fa-solid fa-puzzle-piece"></i></button>
+      <div style="flex:1"></div>
+      <button class="activity-icon" data-action="settings" title="Settings (F1)"><i class="fa-solid fa-gear"></i></button>
+    </div>
+
+    <!-- Sidebar -->
+    <div id="sidebar">
+      <div id="sidebar-inner" style="flex:1;display:flex;flex-direction:column;overflow:hidden;"></div>
+    </div>
+
+    <!-- Sidebar resize handle -->
+    <div id="sidebar-resize"></div>
+
+      <!-- Editor area -->
+      <div id="editor-area">
+        <div id="editor-error-banner" class="editor-error-banner hidden"
+             onclick="gotoErrorFromBanner()">
+          <i class="fa-solid fa-circle-xmark" id="err-banner-icon"></i>
+          <span id="err-banner-msg"></span>
+          <span id="err-banner-pos"></span>
+        </div>
+        <div id="editor-groups">
+        <!-- Editor groups, tabs and breadcrumbs are rendered here by JS -->
+      </div>
+
+      <!-- Panel resize handle -->
+      <div id="panel-resize"></div>
+
+      <!-- Bottom panel -->
+      <div id="bottom-panel" class="hidden">
+        <div id="panel-tabs">
+          <div class="panel-tab active" data-panel="terminal">Terminal</div>
+          <div class="panel-tab" data-panel="repl">REPL</div>
+          <div class="panel-tab" data-panel="problems">Problems</div>
+          <div class="panel-tab" data-panel="output">Output</div>
+          <div class="panel-tab" data-panel="debug">Debug Console</div>
+          <div class="panel-spacer"></div>
+          <button class="panel-btn" id="new-term-btn" title="New Terminal"><i class="fa-solid fa-plus"></i></button>
+          <button class="panel-btn" id="panel-clear-btn" title="Clear"><i class="fa-regular fa-trash-can"></i></button>
+          <button class="panel-btn" id="panel-max-btn" title="Maximize / Restore"><i class="fa-solid fa-window-maximize"></i></button>
+          <button class="panel-btn" id="panel-close-btn" title="Close Panel"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+
+        <!-- Terminal pane -->
+        <div class="panel-view active" id="pane-terminal" data-panel="terminal">
+          <div id="term-scroll" class="term-scroll"></div>
+          <div id="terminal-input-row">
+            <span id="term-prompt-label">/ $ </span>
+            <span id="term-cwd-label"></span>
+            <input id="term-input" type="text" spellcheck="false"
+              autocorrect="off" autocapitalize="off" autocomplete="off"
+              placeholder="Type a command…"/>
+          </div>
+        </div>
+
+        <!-- REPL pane -->
+        <div class="panel-view" id="pane-repl" data-panel="repl">
+          <div id="repl-scroll" class="term-scroll"></div>
+          <div id="repl-input-row">
+            <span id="repl-prompt-label">&gt;</span>
+            <input id="repl-input" type="text" spellcheck="false"
+              autocorrect="off" autocapitalize="off" autocomplete="off"
+              placeholder="KentScript REPL — type code and press Enter…"/>
+            <div id="repl-suggest" class="repl-suggest hidden"></div>
+          </div>
+        </div>
+
+        <!-- Problems pane -->
+        <div class="panel-view" id="pane-problems" data-panel="problems">
+          <div id="problems-list" style="color:var(--text-dim);padding:8px 0;">No problems detected.</div>
+        </div>
+
+        <!-- Output pane -->
+        <div class="panel-view" id="pane-output" data-panel="output">
+          <div id="output-log" class="term-scroll"></div>
+        </div>
+
+        <!-- Debug console pane -->
+        <div class="panel-view" id="pane-debug" data-panel="debug">
+          <div id="debug-content" style="color:var(--text-dim);padding:8px 0;white-space:pre-wrap;font-family:monospace;font-size:12px;">Debug session not started.</div>
+          <div id="debug-input-row" style="display:flex;gap:6px;align-items:center;padding:6px 8px;border-top:1px solid var(--border);flex-shrink:0;">
+            <button class="btn" onclick="debugCommand('c')" title="Continue">▶ Cont</button>
+            <button class="btn" onclick="debugCommand('s')" title="Step into">⤵ Step</button>
+            <button class="btn" onclick="debugCommand('n')" title="Step over">⤵ Next</button>
+            <button class="btn" onclick="debugCommand('q')" title="Quit">■ Quit</button>
+            <span id="dbg-status" style="color:var(--text-dim);font-size:11px;margin-left:auto;"></span>
+            <span style="color:var(--text-green);">(debug)</span>
+            <span style="color:var(--text-green);">&gt;</span>
+            <input id="dbg-cmd" type="text" spellcheck="false" placeholder="c / s / n / q / p &lt;var&gt;"
+                   style="flex:1;min-width:80px;background:transparent;border:none;color:var(--text);outline:none;font-family:monospace;font-size:12px;" />
+          </div>
+        </div>
+      </div>
+    </div><!-- /editor-area -->
+  </div><!-- /workspace -->
+
+  <!-- Status bar -->
+  <div id="statusbar">
+    <div class="status-item" id="status-remote" title="Remote"><i class="fa-solid fa-tower-broadcast"></i> <span>Local</span></div>
+    <div class="status-item hide-mobile" id="status-branch" title="Git branch"><i class="fa-solid fa-code-branch"></i> <span>main</span></div>
+    <div class="status-item" id="status-errors" title="Errors &amp; Warnings">
+      <i class="fa-solid fa-triangle-exclamation"></i> <span id="status-err-count">0</span>
+      <i class="fa-solid fa-circle-info"></i> <span id="status-warn-count">0</span>
+    </div>
+    <div class="status-spacer"></div>
+    <div class="status-item" id="status-ln" title="Cursor position">Ln 1, Col 1</div>
+    <div class="status-item hide-mobile" id="status-spaces" data-dropdown="indent-dropdown" title="Indentation"><span id="status-spaces-label">Spaces: 4</span></div>
+    <div class="status-item hide-mobile" id="status-encoding" data-dropdown="encoding-dropdown" title="Encoding"><span id="status-encoding-label">UTF-8</span></div>
+    <div class="status-item hide-mobile" id="status-eol" data-dropdown="eol-dropdown" title="End of Line"><span id="status-eol-label">LF</span></div>
+    <div class="status-item" id="status-lang" data-dropdown="lang-dropdown" title="Language"><span id="status-lang-label">Plain Text</span></div>
+    <div class="status-item" id="status-theme-btn" title="Toggle theme"><i class="fa-solid fa-circle-half-stroke"></i></div>
+    <div class="status-item" id="status-bell" title="Notifications"><i class="fa-regular fa-bell"></i></div>
+  </div>
+
+  <!-- Command palette -->
+  <div class="overlay" id="cmd-overlay">
+    <div class="overlay-box">
+      <input class="overlay-input" id="cmd-input" type="text" placeholder="&gt; Type a command or file name…" autocomplete="off"/>
+      <div class="overlay-list" id="cmd-list"></div>
+    </div>
+  </div>
+
+  <!-- Go to line overlay -->
+  <div class="overlay" id="goto-overlay">
+    <div class="overlay-box" style="width:360px;">
+      <input class="overlay-input" id="goto-input" type="text" placeholder="Go to line (e.g. 42:8)"/>
+    </div>
+  </div>
+
+  <!-- Keyboard shortcuts overlay -->
+  <div class="overlay" id="keys-overlay">
+    <div class="overlay-box">
+      <div style="padding:12px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px;">
+        <strong style="flex:1;">Keyboard Shortcuts</strong>
+        <input id="keys-filter-input" type="text" placeholder="Search shortcuts…"
+          style="flex:1;max-width:280px;background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:4px 8px;border-radius:3px;"/>
+        <button class="overlay-close" data-target="keys-overlay" style="color:var(--text-dim);font-size:18px;"><i class="fa-solid fa-xmark"></i></button>
+      </div>
+      <div id="keys-list"></div>
+    </div>
+  </div>
+
+  <!-- Settings overlay -->
+  <div id="settings-overlay">
+    <div id="settings-header">
+      <i class="fa-solid fa-gear"></i>
+      <h2>Settings</h2>
+      <input id="settings-search" type="text" placeholder="Search settings…"
+        style="flex:1;max-width:320px;background:var(--input-bg);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:3px;"/>
+      <button id="settings-close"><i class="fa-solid fa-xmark"></i></button>
+    </div>
+    <div id="settings-body">
+      <div id="settings-nav"></div>
+      <div id="settings-content"></div>
+    </div>
+  </div>
+
+  <!-- Context menu -->
+  <div id="ctx-menu"></div>
+
+  <!-- Notifications -->
+  <div id="notifications"></div>
+
+  <!-- Mobile sidebar overlay backdrop -->
+  <div id="sidebar-overlay"></div>
+
+  <!-- Mobile sidebar toggle FAB -->
+  <button id="mobile-fab" title="Toggle sidebar"><i class="fa-solid fa-bars"></i></button>
+
+</div><!-- /app -->
+
+<!-- Monaco Editor — vendored locally so workers load same-origin (this is what
+     makes completions / hover / diagnostics reliable on mobile and offline) -->
+<script src="/vs/loader.js"></script>
+<script>
+window.MonacoEnvironment = {
+  getWorkerUrl: function (moduleId, label) {
+    var b = '/vs';
+    if (label === 'json') return b + '/language/json/jsonWorker.js';
+    if (label === 'css' || label === 'scss' || label === 'less') return b + '/language/css/cssWorker.js';
+    if (label === 'html' || label === 'handlebars' || label === 'razor') return b + '/language/html/htmlWorker.js';
+    if (label === 'typescript' || label === 'javascript') return b + '/language/typescript/tsWorker.js';
+    return b + '/base/worker/workerMain.js';
+  }
+};
+require.config({ paths: { vs: '/vs' } });
+require(['vs/editor/editor.main'], function() {
+  window._monacoReady = true;
+  document.dispatchEvent(new Event('monaco-ready'));
+});
+</script>
+<script src="ide-app.js?v=20260822b"></script>
+</body>
+</html>

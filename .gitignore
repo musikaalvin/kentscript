@@ -1,0 +1,16 @@
+__pycache__/
+*.pyc
+*.so
+*.o
+test_*
+/tmp/
+stdlib/hw_*.ks
+stdlib/test_*.ks
+runtime/c/ks_runtime.a
+payload.tar.gz
+kentscript
+*.spec
+web-ide/dist/
+
+# Generated compiler build artifacts
+examples/network/build/

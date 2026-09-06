@@ -1,0 +1,185 @@
+{
+  "name": "vscode-kentscript",
+  "displayName": "KentScript",
+  "description": "KentScript language support: syntax highlighting, LSP (completion/hover/diagnostics) and build/run/debug commands",
+  "version": "3.1.0",
+  "publisher": "pyLord",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "activationEvents": [
+    "onLanguage:kentscript",
+    "onCommand:kentscript.run",
+    "onCommand:kentscript.build",
+    "onCommand:kentscript.debug"
+  ],
+  "main": "./extension.js",
+  "contributes": {
+    "languages": [
+      {
+        "id": "kentscript",
+        "aliases": [
+          "KentScript",
+          "kentscript"
+        ],
+        "extensions": [
+          ".ks"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "kentscript",
+        "scopeName": "source.kentscript",
+        "path": "./syntaxes/kentscript.tmLanguage.json"
+      }
+    ],
+    "themes": [
+      {
+        "label": "KentScript Dark",
+        "uiTheme": "vs-dark",
+        "path": "./themes/kentscript-dark.json"
+      }
+    ],
+    "commands": [
+      {
+        "command": "kentscript.run",
+        "title": "KentScript: Run",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.runWithArgs",
+        "title": "KentScript: Run with Arguments",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.build",
+        "title": "KentScript: Build (native)",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.buildRelease",
+        "title": "KentScript: Build Release (PGO)",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.debug",
+        "title": "KentScript: Debug",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.info",
+        "title": "KentScript: System Info",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.version",
+        "title": "KentScript: Show Version",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.newFile",
+        "title": "KentScript: New File",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.openDocs",
+        "title": "KentScript: Open Documentation",
+        "category": "KentScript"
+      },
+      {
+        "command": "kentscript.restartLsp",
+        "title": "KentScript: Restart Language Server",
+        "category": "KentScript"
+      }
+    ],
+    "keybindings": [
+      {
+        "command": "kentscript.run",
+        "key": "ctrl+f5",
+        "mac": "cmd+f5",
+        "when": "editorLangId == kentscript"
+      },
+      {
+        "command": "kentscript.build",
+        "key": "ctrl+shift+b",
+        "mac": "cmd+shift+b",
+        "when": "editorLangId == kentscript"
+      },
+      {
+        "command": "kentscript.debug",
+        "key": "f5",
+        "mac": "cmd+f5",
+        "when": "editorLangId == kentscript"
+      }
+    ],
+    "menus": {
+      "editor/context": [
+        {
+          "command": "kentscript.run",
+          "when": "editorLangId == kentscript",
+          "group": "navigation"
+        },
+        {
+          "command": "kentscript.build",
+          "when": "editorLangId == kentscript",
+          "group": "navigation"
+        }
+      ],
+      "explorer/context": [
+        {
+          "command": "kentscript.run",
+          "when": "resourceExtname == .ks",
+          "group": "navigation"
+        },
+        {
+          "command": "kentscript.build",
+          "when": "resourceExtname == .ks",
+          "group": "navigation"
+        }
+      ]
+    },
+    "configuration": {
+      "type": "object",
+      "title": "KentScript",
+      "properties": {
+        "kentscript.executablePath": {
+          "type": "string",
+          "default": "kentscript",
+          "description": "Path or command name of the KentScript CLI (main.py wrapper)"
+        },
+        "kentscript.pythonPath": {
+          "type": "string",
+          "default": "python3",
+          "description": "Python interpreter used by the LSP server to generate language data"
+        },
+        "kentscript.lspServerPath": {
+          "type": "string",
+          "default": "",
+          "description": "Explicit path to kentscript-lsp/server.js (defaults to ../kentscript-lsp/server.js)"
+        },
+        "kentscript.lsp.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable the KentScript language server (completion, hover, diagnostics)"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/node": "^18.0.0",
+    "@types/vscode": "^1.75.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "vscode-languageclient": "^8.0.0"
+  }
+}
